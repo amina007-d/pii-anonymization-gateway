@@ -53,3 +53,53 @@ To develop a middleware system that, before text is sent to external AI services
 - Synthetic annotated test corpus (Kazakh, Russian, English)
 - Evaluation report: precision, recall and F1 per entity type, latency, and comparison with a baseline (Microsoft Presidio without customization [3])
 - Target: recall ≥ 0.95 for structured identifiers (IIN/BIN, phone, e-mail, card number, IBAN)
+
+## 7. Scope
+
+**In scope**
+
+- Text input entered or pasted by the user
+- Languages: Kazakh, Russian, English, including mixed-language text
+- PII categories: full names, IIN/BIN, phone numbers, e-mail addresses, postal addresses, ID document numbers, IBAN, bank card numbers
+- Target AI services: ChatGPT and Gemini (web interfaces via extension, APIs via proxy); the choice will be confirmed by user interviews. The extension uses a separate adapter per service, so other services (e.g. Claude, Copilot, DeepSeek) can be added without changing the core
+- Processing policies per data type: replace, block sending, warn
+- On-premise deployment (Docker)
+
+**Out of scope**
+
+- Images, PDF and scanned documents (OCR)
+- Audio and video content
+- Mobile applications
+- AI services other than ChatGPT and Gemini
+- Detection of non-personal confidential information (trade secrets, source code)
+
+## 8. Engineering complexity
+
+- **Multilingual NER with limited resources:** few annotated datasets and models exist for Kazakh; texts often switch between languages within one sentence.
+- **Morphology-aware pseudonymization:** Kazakh and Russian names change form by case and suffix; all forms of one entity must map to the same pseudonym, and restoration must still work after the AI model inflects or reformulates the pseudonym.
+- **Preserving meaning:** anonymized text must remain useful for the AI model, so pseudonyms must keep the entity type and context.
+- **Security of the system itself:** the pseudonym mapping contains the same personal data the system protects and must be encrypted and short-lived.
+- **Streaming integration:** pseudonyms may be split across chunks of a streamed AI response.
+- **Performance:** processing must not noticeably delay the user's request.
+
+## 9. Constraints and risks (summary)
+
+| Risk | Mitigation |
+|---|---|
+| Limited Kazakh NER data and models | Use KazNERD and synthetic data; rule-based recognizers for structured identifiers |
+| AI service web interfaces change and break interception | Limit extension support to two services; provide proxy API as a stable alternative |
+| Real personal data cannot be used for testing | Generate a synthetic corpus with fake but valid-format identifiers |
+| Schedule slippage | MVP first (rules + basic NER + extension), extensions later |
+
+A detailed plan and risk register are maintained in `docs/project-plan.md` and the YouTrack project.
+
+## 10. References
+
+[1] Law of the Republic of Kazakhstan No. 94-V "On Personal Data and Its Protection", 21 May 2013 (current edition). https://adilet.zan.kz/rus/docs/Z1300000094
+[2] Bloomberg. Samsung Bans Staff's AI Use After Spotting ChatGPT Data Leak, 2 May 2023. https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak
+[3] Microsoft Presidio documentation. https://presidio.dataprivacystack.org/
+[4] Cyberhaven. Employees are pasting company data into ChatGPT. https://www.cyberhaven.com/blog/4-2-of-workers-have-pasted-company-data-into-chatgpt
+[5] N. Lukas et al. Analyzing Leakage of Personally Identifiable Information in Language Models. IEEE S&P 2023.
+[6] N. Mireshghallah et al. Can LLMs Keep a Secret? Testing Privacy Implications of Language Models via Contextual Integrity Theory. ICLR 2024.
+[7] R. Yeshpanov, Y. Khassanov, H. A. Varol. KazNERD: Kazakh Named Entity Recognition Dataset. LREC 2022.
+[8] Existing system comparison and Presidio baseline test: `docs/existing-systems.md`.
