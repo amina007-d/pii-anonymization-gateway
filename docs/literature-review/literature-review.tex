@@ -1,0 +1,104 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\begin{document}
+\maketitlepage{Literature Review}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This review examines research relevant to a system that detects personal data in text and replaces it with reversible pseudonyms before the text is sent to generative AI services, and then restores the original values in the response. The review aims to establish (1) why sending personal data to large language models (LLMs) is a risk, (2) how text anonymization is performed and evaluated, (3) how well existing personal data detection tools work, (4) which systems already protect prompts sent to LLM services, and (5) what resources exist for Kazakh, Russian and mixed-language text. The answers define the requirements, design decisions and evaluation plan of the project.
+
+\subsection{Search strategy}
+
+The main database was \textbf{Scopus}, accessed through the university subscription. Three structured queries were used: (a) titles combining privacy or personal data with prompts or queries and with sanitization, anonymization, pseudonymization or redaction, restricted to works on language models (2022 onwards, 36 results); (b) titles combining personally identifiable information or personal data with detection, recognition or redaction, restricted to text and computer science (2021 onwards, 75 results); and (c) Kazakh named entity recognition (2018 onwards, 29 results). A broader query on text anonymization and de-identification (174 results) was used to check coverage. ACL Anthology, Google Scholar and arXiv were searched additionally for works on pseudonymization, attribute inference by LLMs and Kazakh--Russian code-switching.
+
+Inclusion criteria: (a) the work addresses detection or anonymization of personal data in text, privacy risks of LLMs, protection of prompts sent to LLM services, or named entity recognition and personal data detection for Kazakh or Russian; (b) the work was published mainly in 2021--2026; (c) the work is peer-reviewed. Works on federated learning and prompt tuning, image, speech and video anonymization, papers without an empirical evaluation and preprints were excluded at the title and abstract stage.
+
+Sixteen peer-reviewed sources were selected; twelve of them were found in Scopus, and the others come from the ACL Anthology and the ICLR proceedings. For one work \cite{r15} only the abstract was available, and its results are reported at abstract level.
+
+\begin{thebibliography}{99}
+\bibitem{r15} K. Aibek, M. Bobur, B. Abay, and F. Hajiyev, ``Named entity recognition algorithms comparison for judicial text data,'' in \emph{Proc. 14th IEEE Int. Conf. on Application of Information and Communication Technologies (AICT)}, 2020, \doi{10.1109/AICT50176.2020.9368843}.
+\end{thebibliography}
+
+\end{document}
