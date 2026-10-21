@@ -1,0 +1,206 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\begin{document}
+\maketitlepage{Project Proposal}
+
+\tableofcontents
+\newpage
+
+\section{General Information}
+
+\begin{table}[htbp]
+\caption{General information about the project}
+\begin{tabularx}{\linewidth}{>{\bfseries}P{4.2cm}L}
+\toprule
+Project title & Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services \\ \rl
+Working name & PII Anonymization Gateway \\ \rl
+Educational programme & Software Engineering, Astana IT University \\ \rl
+Team & Dossan Amina (SE-2422) --- team lead, server side and detection core; \newline Abzhamal Nazerke (SE-2422) --- client application, test corpus and evaluation \\ \rl
+Supervisor & Sakhipov A.A., PhD, Assistant Professor, School of Software Engineering \\ \rl
+Period & October 2026 -- May 2027 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Problem Statement}
+
+Generative artificial intelligence (AI) services such as ChatGPT and Gemini have become everyday working tools. Employees and students paste contracts, correspondence, human-resources documents and client records into these services in order to summarize, translate or rewrite them~\cite{cyberhaven}. Such texts frequently contain personal data: full names, individual identification numbers (IIN), phone numbers, addresses, identity document numbers and bank card numbers.
+
+Once submitted, these data are processed and potentially stored by a third-party provider outside the organization and, as a rule, outside the Republic of Kazakhstan. This conflicts with the Law of the Republic of Kazakhstan ``On Personal Data and Their Protection'', which regulates the collection, processing and cross-border transfer of personal data~\cite{law}. Research shows that language models can memorize and disclose personal data~\cite{lukas} and do not reliably keep private information confidential even when instructed to do so~\cite{confaide}. Publicly reported incidents of confidential data leaking into AI services~\cite{samsung} have led many organizations to restrict or prohibit AI tools altogether, thereby losing their productivity benefits.
+
+Manual removal of personal data before each request is slow and unreliable. Existing automated detection tools are designed primarily for English, do not recognize Kazakhstan-specific identifiers (IIN/BIN, local phone and address formats, Kazakh names), handle mixed Kazakh--Russian--English text poorly~\cite{kaznerd, existing}, and typically mask data irreversibly, so that the AI response no longer contains the names and values the user needs. Recent research prototypes that protect prompts before they reach language model services have been evaluated only in English or on European-language data, and they either do not restore the original values or restore them only on request~\cite{casper, promptshield}.
+
+The problem addressed by the project is therefore the absence of a practical tool that allows users in Kazakhstan to apply external AI services to texts containing personal data without disclosing these data, while still obtaining a usable response.
+
+The assumptions about how often users send personal data to AI services, which data types are most frequent, whether organizations restrict AI tools and which languages are used in prompts are being verified through an anonymous user survey; the results are presented in the document \emph{Evidence of Relevance}. A comparable survey of 83 chatbot users found that 96.3\% expect AI chatbots to comply with data protection legislation~\cite{promptshield}.
+
+\section{Target Users}
+
+\begin{table}[htbp]
+\caption{Target user groups and their needs}
+\begin{tabularx}{\linewidth}{P{6.2cm}L}
+\toprule
+\thead \textbf{User group} & \textbf{Need} \\ \midrule
+Employees handling personal data (banking, human resources, legal services, healthcare, education) & Use AI tools on work documents without violating data protection rules \\ \rl
+Public-sector employees (public service centres, local executive bodies) & Use AI tools on documents containing citizens' IIN and other personal data \\ \rl
+Teachers and students & Use AI tools on texts mentioning students, colleagues or clients \\ \rl
+Information security teams and administrators & Define processing policies and monitor attempts to send personal data \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Aim and Objectives}
+
+The aim of the project is to develop a middleware system that, before text is sent to external AI services, automatically detects personal data in Kazakh, Russian and English, replaces them with reversible pseudonyms, and restores the original values in the AI response within the organization's infrastructure.
+
+To achieve this aim, the following objectives are set:
+\begin{enumerate}
+\item Analyse the legal requirements and existing approaches and tools for personal data detection, and define the set of personal data categories to be supported.
+\item Design the system architecture and the interface between the client and the anonymization service.
+\item Implement hybrid personal data detection that combines rule-based recognizers (with checksum validation for IIN/BIN and bank card numbers) and multilingual named entity recognition (NER) models, including adaptation for the Kazakh language using the KazNERD dataset~\cite{kaznerd}.
+\item Implement reversible pseudonymization with consistent pseudonyms for different word forms of the same entity, and restoration of the original values in AI responses.
+\item Protect the pseudonym mapping (encryption, limited retention) and exclude personal data from logs.
+\item Implement a proxy interface compatible with the programming interfaces of language model providers (OpenAI, Gemini), including streaming responses.
+\item Develop a browser extension that highlights detected data and allows the user to confirm or edit them before sending, and an administration panel for policies and logs.
+\item Create a synthetic annotated corpus in three languages and evaluate detection quality against a baseline solution.
+\end{enumerate}
+
+\section{Expected Outcomes}
+
+The expected outcomes of the project are: a working anonymization service with a documented REST interface; a browser extension and an administration panel integrated with the service; a synthetic annotated test corpus in Kazakh, Russian and English; and an evaluation report containing precision, recall and F1 score per entity type, processing latency, and a comparison with a baseline solution (Microsoft Presidio without customization~\cite{presidio}). The target quality is a recall of at least 0.95 for structured identifiers (IIN/BIN, phone number, e-mail address, bank card number, IBAN).
+
+\section{Scope}
+
+\subsection{In Scope}
+\begin{itemize}
+\item Text entered or pasted by the user.
+\item Languages: Kazakh, Russian and English, including mixed-language text; the test corpus contains a separate share of code-switched examples, which are evaluated separately.
+\item Personal data categories: full names, IIN/BIN, phone numbers, e-mail addresses, postal addresses, identity document numbers, IBAN, bank card numbers.
+\item Target AI services: ChatGPT and Gemini (web interfaces through the browser extension, programming interfaces through the proxy). The choice is to be confirmed by the user survey. The extension uses a separate adapter for each service, so that other services (for example, Claude, Copilot or DeepSeek) can be added without changing the core.
+\item Processing policies per data type: replace, block sending, or warn.
+\item On-premise deployment using Docker.
+\end{itemize}
+
+\subsection{Out of Scope}
+\begin{itemize}
+\item Images, PDF files and scanned documents (optical character recognition).
+\item Audio and video content.
+\item Mobile applications.
+\item AI services other than ChatGPT and Gemini: they are not implemented within this project, although the adapter-based architecture supports them.
+\item Detection of non-personal confidential information (trade secrets, source code).
+\end{itemize}
+
+\section{Engineering Complexity}
+
+The project involves several non-trivial engineering problems. First, \emph{multilingual NER with limited resources}: few annotated datasets and models exist for Kazakh, and texts often switch between languages within one sentence. Second, \emph{morphology-aware pseudonymization}: Kazakh and Russian names change form by case and suffix, all forms of one entity must map to the same pseudonym, and restoration must still work after the AI model inflects or reformulates the pseudonym. Third, \emph{preservation of meaning}: anonymized text must remain useful for the AI model, so pseudonyms must keep the entity type and context. Fourth, \emph{security of the system itself}: the pseudonym mapping contains the same personal data that the system protects and must therefore be encrypted and short-lived. Fifth, \emph{streaming integration}: pseudonyms may be split across fragments of a streamed AI response. Finally, \emph{performance}: processing must not noticeably delay the user's request.
+
+\section{Constraints and Risks}
+
+\begin{table}[htbp]
+\caption{Main risks and mitigation measures}
+\begin{tabularx}{\linewidth}{P{6.2cm}L}
+\toprule
+\thead \textbf{Risk} & \textbf{Mitigation} \\ \midrule
+Limited Kazakh NER data and models & Use of KazNERD and synthetic data; rule-based recognizers for structured identifiers \\ \rl
+Changes in the web interfaces of AI services break interception & Extension support limited to two services; the proxy interface as a stable alternative \\ \rl
+Real personal data cannot be used for testing & Generation of a synthetic corpus with fictitious identifiers in a valid format \\ \rl
+Schedule slippage & Minimum viable product first (rules, basic NER, extension), extensions later \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A detailed plan and the risk register are maintained in the document \emph{Project Plan and Risks} and in the YouTrack project.
+
+\begin{thebibliography}{99}
+\bibitem{cyberhaven} Cyberhaven, ``4.2\% of workers have pasted company data into ChatGPT,'' 2023. [Online]. Available: \url{https://www.cyberhaven.com/blog/4-2-of-workers-have-pasted-company-data-into-chatgpt}
+\bibitem{law} Law of the Republic of Kazakhstan No.~94-V ``On Personal Data and Their Protection'', 21 May 2013 (current edition). [Online]. Available: \url{https://adilet.zan.kz/rus/docs/Z1300000094}
+\bibitem{lukas} N. Lukas, A. Salem, R. Sim, S. Tople, L. Wutschitz, and S. Zanella-Béguelin, ``Analyzing leakage of personally identifiable information in language models,'' in \emph{Proc. IEEE Symposium on Security and Privacy}, 2023, pp. 346--363, \doi{10.1109/SP46215.2023.10179300}.
+\bibitem{confaide} N. Mireshghallah, H. Kim, X. Zhou, Y. Tsvetkov, M. Sap, R. Shokri, and Y. Choi, ``Can LLMs keep a secret? Testing privacy implications of language models via contextual integrity theory,'' in \emph{Proc. ICLR}, 2024. [Online]. Available: \url{https://arxiv.org/abs/2310.17884}
+\bibitem{samsung} M. Gurman, ``Samsung bans staff's AI use after spotting ChatGPT data leak,'' \emph{Bloomberg}, 2 May 2023. [Online]. Available: \url{https://www.bloomberg.com/news/articles/2023-05-02/samsung-bans-chatgpt-and-other-generative-ai-use-by-staff-after-leak}
+\bibitem{kaznerd} R. Yeshpanov, Y. Khassanov, and H. A. Varol, ``KazNERD: Kazakh named entity recognition dataset,'' in \emph{Proc. LREC}, 2022, pp. 417--426. [Online]. Available: \url{https://aclanthology.org/2022.lrec-1.44}
+\bibitem{existing} A. Dossan and N. Abzhamal, ``Existing system comparison,'' project document, Astana IT University, 2026.
+\bibitem{casper} C. J. Chong, C. Hou, Z. Yao, and S. M. S. Talebi, ``Casper: Prompt sanitization for protecting user privacy in web-based large language models,'' in \emph{Proc. IEEE 12th Int. Conf. on Cyber Security and Cloud Computing (CSCloud)}, 2025, pp. 122--131, \doi{10.1109/CSCloud66326.2025.00027}.
+\bibitem{promptshield} A. I. Asimine, F. Salhab Doria Ricardo, F. Torgo, G. Choudhary, and N. Dragoni, ``PromptShield: Protecting user privacy in AI chatbots,'' \emph{Software}, vol.~5, no.~2, art.~24, 2026, \doi{10.3390/software5020024}.
+\bibitem{presidio} Microsoft, ``Presidio: Data protection and de-identification SDK,'' documentation. [Online]. Available: \url{https://presidio.dataprivacystack.org/}
+\end{thebibliography}
+
+\end{document}
