@@ -1,12 +1,14 @@
 # Interview Guide — Evidence of Relevance
 
+> **Status:** not used for interviews. After discussion with the supervisor, data collection was changed to an online survey (Google Forms), which allows reaching more respondents within the time frame. The questions of this guide were adapted into `survey-questionnaire.md`.
+
 **Project:** PII Anonymization Gateway for AI Services
 **Format:** 15–20 minutes, online / in person / in writing
 **Target respondents:** employees who handle personal data (banking, HR, legal, healthcare, education), teachers, information security specialists
 
 ## Introduction (read to the respondent)
 
-> Мы делаем дипломный проект — систему, которая находит и скрывает персональные данные в тексте перед отправкой в ChatGPT и другие ИИ-сервисы, а потом возвращает их в ответ. Интервью займёт около 15 минут. Ваше имя и место работы мы не публикуем: в записях будут только должность и сфера. Можно ли использовать ваши ответы в дипломной работе в обезличенном виде?
+> Мы делаем дипломный проект — систему, которая находит и скрывает персональные данные в тексте перед отправкой в ChatGPT и другие ИИ-сервисы, а потом возвращает их в ответ. Интервью займёт около 15 минут. Ваше имя и место работы мы не публикуем: в записях будут только должность и сфера. Можно ли использовать ваши ответы в дипломной работе в обезличенном виде? Вы можете пропустить любой вопрос или прекратить интервью в любой момент.
 
 ☐ Согласие получено
 
