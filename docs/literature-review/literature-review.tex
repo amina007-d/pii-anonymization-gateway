@@ -97,7 +97,46 @@ Inclusion criteria: (a) the work addresses detection or anonymization of persona
 
 Sixteen peer-reviewed sources were selected; twelve of them were found in Scopus, and the others come from the ACL Anthology and the ICLR proceedings. For one work \cite{r15} only the abstract was available, and its results are reported at abstract level.
 
+\section{Privacy Risks of Large Language Models}
+
+Language models expose personal data in ways that the user cannot control once the data has been sent. Lukas et al.~\cite{r1} defined extraction, reconstruction and inference attacks on GPT-2 models fine-tuned on court cases, e-mails and medical reviews. Their attacks extracted up to ten times more personal identifiers than earlier attacks, and sentence-level differential privacy still leaked about 3\% of personal data sequences. The authors conclude that scrubbing personal data reduces but does not prevent leakage.
+
+Risk is not limited to memorization. Staab et al.~\cite{r2} showed that LLMs infer personal attributes such as location, age and income from ordinary user-written text: GPT-4 reached 85.5\% top-1 and 95.2\% top-3 accuracy on 520 manually labelled Reddit profiles. A commercial anonymization service reduced location accuracy only from about 86\% to 55\%, which indicates that removing explicit identifiers does not prevent inference from context.
+
+Models also cannot be relied on to protect information they receive. In the ConfAIde benchmark \cite{r3}, GPT-4 revealed secrets in 22\% and ChatGPT in 93\% of tier-3 scenarios, and in meeting-summary scenarios they shared private information with inappropriate recipients 39\% and 57\% of the time, even when explicitly instructed to preserve privacy.
+
+\textbf{Implications for the project.} Protection must be applied before text reaches the AI service provider; the project processes text inside the organization and sends only pseudonymized text. At the same time, \cite{r2} shows that removing direct identifiers is necessary but not sufficient, and this limitation is stated in the project scope.
+
+\section{Text Anonymization and its Evaluation}
+
+Lison et al.~\cite{r4} review text anonymization from two research traditions: NLP-based de-identification, which treats the task as sequence labelling, and privacy-preserving data publishing, which reasons about disclosure risk. In their case study on Wikipedia biographies, an NER-based approach reached F1 = 0.57 and the default configuration of Microsoft Presidio reached a recall of only 0.25 (F1 = 0.38), missing most quasi-identifiers. Annotator agreement was low ($\alpha$ = 0.36), showing that several valid anonymizations of one text can exist.
+
+The Text Anonymization Benchmark (TAB) \cite{r5} addresses the evaluation problem. It contains 1,268 English court cases in which each entity is marked as a direct identifier, a quasi-identifier or not to be masked. TAB introduces entity-level recall --- an entity counts as protected only if all its mentions are masked --- separately for direct (ER\_di) and quasi-identifiers (ER\_qi), and a precision weighted by information content. Default Presidio reached ER\_di = 0.46, a general NER model ER\_di = 0.94 with precision 0.44, and a fine-tuned Longformer ER\_di = 1.00 with precision 0.84, which dropped to 0.71 on out-of-domain texts.
+
+Yermilov et al.~\cite{r6} studied pseudonymization --- replacing names, locations and organizations with realistic substitutes --- and its effect on downstream tasks. NER-based pseudonymization reduced summarization quality only slightly (ROUGE-1 from 42.82 to 41.93) and leaked the fewest identifiers (10.2\%), while LLM-based pseudonymization leaked 35.5\% and required sending the text to a third-party API. Inconsistent replacement of the same entity degraded downstream quality.
+
+\textbf{Implications for the project.} The evaluation plan follows TAB \cite{r5}: entity-level recall per identifier type and an out-of-domain test. Pseudonymization rather than deletion is chosen because it preserves the usefulness of the text \cite{r6}, and replacements must be consistent for each entity.
+
+\section{Personal Data Detection Tools and Their Limitations}
+
+Subramani et al.~\cite{r7} compared Microsoft Presidio with regular expressions for eight types of personal information in two large web corpora. Presidio was more precise for phone numbers (95.5\% vs 67.5\%), e-mail addresses (99.0\% vs 74.5\%) and especially IBAN codes (98.5\% vs 7.5\%); the regular expressions had no checksum validation and matched ISBNs and hash values. Both methods failed on credit card numbers, which were confused with product and article identifiers. The authors recommend region-specific patterns because detection approaches are language- and country-specific.
+
+Ji et al.~\cite{r8} compared Presidio, Azure AI Language and GPT-4o-mini on 22,688 student essays. Presidio with a transformer model reached high recall (0.84) but very low precision (0.21); Azure reached 0.92 and 0.25; a fine-tuned GPT-4o-mini reached recall 0.96 and precision 0.60 at about one tenth of the Azure cost. Presidio recall was lower for names of African (0.76) and Asian (0.86) origin than for European names (0.90). The most accurate configuration, however, requires sending the text to an external provider.
+
+Fei et al.~\cite{r9} built KDPII, a Korean dialogue dataset with 31,954 annotated personal data items in 33 categories, and evaluated 14 fine-tuned language models. XLM-RoBERTa-large performed best (F1 = 0.89; average over models 0.83). Structured identifiers such as phone and card numbers were recognized much better than unstructured, language-specific categories (names 0.78, places 0.58, workplaces 0.54), and the authors conclude that language-specific personal data is the main difficulty for non-English languages.
+
+\textbf{Implications for the project.} Default Presidio is a weak and biased baseline \cite{r4,r5,r8}, which justifies custom recognizers and its use as the evaluation baseline. Structured identifiers require checksum validation \cite{r7}. Kazakh names and Kazakhstan identifiers are language-specific categories \cite{r9} and need dedicated rules and a name gazetteer; the evaluation should report results per name origin \cite{r8}.
+
 \begin{thebibliography}{99}
+\bibitem{r1} N. Lukas, A. Salem, R. Sim, S. Tople, L. Wutschitz, and S. Zanella-Béguelin, ``Analyzing leakage of personally identifiable information in language models,'' in \emph{Proc. IEEE Symposium on Security and Privacy}, 2023, pp. 346--363, \doi{10.1109/SP46215.2023.10179300}.
+\bibitem{r2} R. Staab, M. Vero, M. Balunović, and M. Vechev, ``Beyond memorization: Violating privacy via inference with large language models,'' in \emph{Proc. 12th Int. Conf. on Learning Representations (ICLR)}, 2024. [Online]. Available: \url{https://arxiv.org/abs/2310.07298}
+\bibitem{r3} N. Mireshghallah, H. Kim, X. Zhou, Y. Tsvetkov, M. Sap, R. Shokri, and Y. Choi, ``Can LLMs keep a secret? Testing privacy implications of language models via contextual integrity theory,'' in \emph{Proc. 12th Int. Conf. on Learning Representations (ICLR)}, 2024. [Online]. Available: \url{https://arxiv.org/abs/2310.17884}
+\bibitem{r4} P. Lison, I. Pilán, D. Sánchez, M. Batet, and L. Øvrelid, ``Anonymisation models for text data: State of the art, challenges and future directions,'' in \emph{Proc. 59th Annual Meeting of the ACL and 11th IJCNLP}, 2021, pp. 4188--4203, \doi{10.18653/v1/2021.acl-long.323}.
+\bibitem{r5} I. Pilán, P. Lison, L. Øvrelid, A. Papadopoulou, D. Sánchez, and M. Batet, ``The Text Anonymization Benchmark (TAB): A dedicated corpus and evaluation framework for text anonymization,'' \emph{Computational Linguistics}, vol.~48, no.~4, pp. 1053--1101, 2022, doi: \href{https://doi.org/10.1162/coli_a_00458}{10.1162/coli\_a\_00458}.
+\bibitem{r6} O. Yermilov, V. Raheja, and A. Chernodub, ``Privacy- and utility-preserving NLP with anonymized data: A case study of pseudonymization,'' in \emph{Proc. 3rd Workshop on Trustworthy Natural Language Processing (TrustNLP)}, 2023, \doi{10.18653/v1/2023.trustnlp-1.20}.
+\bibitem{r7} N. Subramani, S. Luccioni, J. Dodge, and M. Mitchell, ``Detecting personal information in training corpora: an analysis,'' in \emph{Proc. 3rd Workshop on Trustworthy Natural Language Processing (TrustNLP)}, 2023, pp. 208--220, \doi{10.18653/v1/2023.trustnlp-1.18}.
+\bibitem{r8} Z. Ji, K. R. Koedinger, Y. Shen, and J. Lin, ``Enhancing the de-identification of personally identifiable information in educational data,'' \emph{Journal of Educational Data Mining}, vol.~17, no.~2, pp. 55--85, 2025. [Online]. Available: \url{https://jedm.educationaldatamining.org/index.php/JEDM/article/view/936}
+\bibitem{r9} L. Fei, Y. Kang, S. Park, Y. Jang, J. Lee, and H. Kim, ``KDPII: A new Korean dialogic dataset for the deidentification of personally identifiable information,'' \emph{IEEE Access}, vol.~12, pp. 135626--135641, 2024, \doi{10.1109/ACCESS.2024.3461804}.
 \bibitem{r15} K. Aibek, M. Bobur, B. Abay, and F. Hajiyev, ``Named entity recognition algorithms comparison for judicial text data,'' in \emph{Proc. 14th IEEE Int. Conf. on Application of Information and Communication Technologies (AICT)}, 2020, \doi{10.1109/AICT50176.2020.9368843}.
 \end{thebibliography}
 
