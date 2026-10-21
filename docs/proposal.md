@@ -28,6 +28,7 @@ Manual removal of personal data before each request is slow and unreliable. Exis
 | User group | Need |
 |---|---|
 | Employees handling personal data (banking, HR, legal, healthcare, education) | Use AI tools on work documents without violating data protection rules |
+| Public-sector employees (e.g. public service centers, akimats) | Use AI tools on documents containing citizens' IIN and other personal data |
 | Teachers and students | Use AI tools on texts mentioning students, colleagues or clients |
 | Information security teams / administrators | Define processing policies and monitor attempts to send personal data |
 
@@ -39,7 +40,7 @@ To develop a middleware system that, before text is sent to external AI services
 
 1. Analyse legal requirements and existing PII detection approaches and tools; define the set of personal data categories to be supported.
 2. Design the system architecture and the API between the client and the anonymization service.
-3. Implement hybrid PII detection combining rule-based recognizers (with checksum validation for IIN/BIN and bank cards) and multilingual NER models, including adaptation for the Kazakh language.
+3. Implement hybrid PII detection combining rule-based recognizers (with checksum validation for IIN/BIN and bank cards) and multilingual NER models, including adaptation for the Kazakh language using the KazNERD dataset.
 4. Implement reversible pseudonymization with consistent pseudonyms for different word forms of the same entity, and restoration of original values in AI responses.
 5. Secure the pseudonym mapping (encryption, limited retention) and exclude personal data from logs.
 6. Implement a proxy API compatible with LLM provider interfaces (OpenAI, Gemini), including streaming responses.
@@ -59,7 +60,7 @@ To develop a middleware system that, before text is sent to external AI services
 **In scope**
 
 - Text input entered or pasted by the user
-- Languages: Kazakh, Russian, English, including mixed-language text
+- Languages: Kazakh, Russian, English, including mixed-language text (the test corpus includes a separate share of code-switched examples, evaluated separately)
 - PII categories: full names, IIN/BIN, phone numbers, e-mail addresses, postal addresses, ID document numbers, IBAN, bank card numbers
 - Target AI services: ChatGPT and Gemini (web interfaces via extension, APIs via proxy); the choice will be confirmed by user interviews. The extension uses a separate adapter per service, so other services (e.g. Claude, Copilot, DeepSeek) can be added without changing the core
 - Processing policies per data type: replace, block sending, warn
@@ -70,7 +71,7 @@ To develop a middleware system that, before text is sent to external AI services
 - Images, PDF and scanned documents (OCR)
 - Audio and video content
 - Mobile applications
-- AI services other than ChatGPT and Gemini
+- AI services other than ChatGPT and Gemini: not implemented within this project, but supported by the adapter-based architecture
 - Detection of non-personal confidential information (trade secrets, source code)
 
 ## 8. Engineering complexity
