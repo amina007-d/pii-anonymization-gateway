@@ -1,0 +1,361 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\usepackage{float}
+\begin{document}
+\maketitlepage{Requirements Specification}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{Purpose}
+
+This document specifies the functional and non-functional requirements for the PII Anonymization Gateway, a system that detects personal data in text before it is sent to external artificial intelligence (AI) services, replaces the data with reversible pseudonyms and restores the original values in the response. The requirements are the basis for the design, the user interface prototype, the implementation and the evaluation of the system.
+
+\subsection{Sources of Requirements}
+
+The requirements were derived from the following sources:
+\begin{itemize}
+\item the project proposal, which defines the aim, objectives and scope of the project;
+\item the Law of the Republic of Kazakhstan ``On Personal Data and Their Protection''~\cite{law}, which regulates the processing and cross-border transfer of personal data;
+\item the literature review, in particular the prompt sanitization prototypes Casper~\cite{casper} and PromptShield~\cite{promptshield} and the Kazakh named entity recognition dataset KazNERD~\cite{kaznerd};
+\item the comparison of existing systems, including the experiment with Microsoft Presidio~\cite{presidio}, which showed that individual identification numbers (IIN) were not recognized without customization;
+\item the user survey ($n=35$) described in the document \emph{Evidence of Relevance};
+\item the technology comparison, where the first versions of FR-1--FR-5 and NFR-1--NFR-3 were used as decision criteria.
+\end{itemize}
+
+The identifiers FR-1--FR-5 and NFR-1--NFR-3 keep the meaning they have in the technology comparison; this document details them and adds the remaining requirements.
+
+\subsection{Definitions}
+
+\begin{table}[H]
+\caption{Terms and abbreviations}
+\small
+\begin{tabularx}{\linewidth}{P{3.6cm}L}
+\toprule
+\thead \textbf{Term} & \textbf{Definition} \\ \midrule
+Personal data & Information relating to an identified or identifiable natural person~\cite{law} \\ \rl
+IIN / BIN & Individual identification number / business identification number: 12-digit identifiers used in Kazakhstan, containing a check digit \\ \rl
+Pseudonym & A placeholder such as \texttt{<PERSON\_1>} that replaces a detected value; the same entity receives the same pseudonym within one request \\ \rl
+Mapping & The correspondence between pseudonyms and original values for one request, required for restoration \\ \rl
+Policy & The action applied to a data type: replace, warn or block \\ \rl
+Fail-closed & Behaviour in which text is not sent to the AI service if it could not be checked \\ \rl
+NER & Named entity recognition \\ \rl
+Recall / precision & The share of personal data values found by the system / the share of detections that are correct \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Stakeholders and User Roles}
+
+The system distinguishes four roles (Table~\ref{tab:roles}). Roles are assigned by the administrator; the user interface and the server enforce them.
+
+\begin{table}[H]
+\caption{User roles}\label{tab:roles}
+\small
+\begin{tabularx}{\linewidth}{P{3.2cm}LP{4.2cm}}
+\toprule
+\thead \textbf{Role} & \textbf{Description} & \textbf{Access} \\ \midrule
+User & Employee or student who sends text to ChatGPT or Gemini through the browser extension & Browser extension only \\ \rl
+Administrator & Information security specialist who configures the system & Policies, users and roles, security settings, log and statistics \\ \rl
+Auditor & Person who monitors compliance without changing settings & Log and statistics, read-only \\ \rl
+Service account & Internal system of the organization (for example, a CRM or chatbot) that calls a language model programmatically & API proxy only \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{System Overview}
+
+The system consists of four components deployed within the organization's infrastructure:
+\begin{enumerate}
+\item \emph{Anonymization service} (server): detects personal data, creates pseudonyms, stores the mapping and restores responses; it exposes a REST interface.
+\item \emph{Browser extension}: intercepts text in the web interfaces of ChatGPT and Gemini, shows the detected data, sends the anonymized text and restores the response on the page.
+\item \emph{API proxy}: provides an interface compatible with the programming interfaces of OpenAI and Gemini for service accounts.
+\item \emph{Administration panel}: web interface for policies, users, security settings, the log and statistics.
+\end{enumerate}
+
+Only anonymized text leaves the organization. Original values and the mapping remain on the organization's server.
+
+\section{Personal Data Categories}
+
+Table~\ref{tab:categories} lists the data types the system must detect. Organization names are not personal data in the narrow sense, but they are included because, together with a BIN or a contract number, they can identify a sole proprietor or the client of a small company.
+
+\begin{table}[H]
+\caption{Supported data types}\label{tab:categories}
+\small
+\begin{tabularx}{\linewidth}{P{3.3cm}P{2.3cm}LP{3.3cm}}
+\toprule
+\thead \textbf{Data type} & \textbf{Pseudonym} & \textbf{Detection method} & \textbf{Validation} \\ \midrule
+Full name & \texttt{PERSON} & NER model (Kazakh, Russian, English) and a Kazakh name gazetteer & --- \\ \rl
+IIN & \texttt{IIN} & Pattern of 12 digits & Check digit, valid date of birth \\ \rl
+BIN & \texttt{BIN} & Pattern of 12 digits with context & Check digit \\ \rl
+Phone number & \texttt{PHONE} & Kazakhstan formats (+7, 8, operator codes) & Length and code \\ \rl
+E-mail address & \texttt{EMAIL} & Pattern & Domain format \\ \rl
+Postal address & \texttt{ADDRESS} & NER model and patterns (street, avenue, building, apartment) & --- \\ \rl
+Identity document number & \texttt{ID\_DOC} & Pattern of 9 digits with context & Context words \\ \rl
+IBAN & \texttt{IBAN} & Pattern ``KZ'' and 18 characters & IBAN checksum \\ \rl
+Bank card number & \texttt{CARD} & Pattern of 16 digits & Luhn algorithm \\ \rl
+Organization name & \texttt{ORG} & NER model and legal forms (LLP, JSC, IE) & --- \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Health data were mentioned by 20\% of survey respondents. They are not included in the initial scope, which focuses on direct identifiers, and are recorded as a candidate category for future work.
+
+\needspace{18\baselineskip}
+\section{Use Cases}
+
+\begin{table}[H]
+\caption{Main use cases}\label{tab:uc}
+\small
+\begin{tabularx}{\linewidth}{P{1.2cm}P{3.6cm}LP{2.4cm}}
+\toprule
+\thead \textbf{ID} & \textbf{Use case} & \textbf{Main flow} & \textbf{Actor} \\ \midrule
+UC-1 & Send a request with personal data & The user types or pastes text; the extension highlights the detected data; the user reviews them, edits them if necessary and confirms; the anonymized text is sent & User \\ \rl
+UC-2 & Receive a restored response & The AI service responds with pseudonyms; the extension replaces them with the original values while the response is streamed & User \\ \rl
+UC-3 & Send a request containing blocked data & The extension detects a data type with the policy ``block'', explains the reason and does not send the text & User \\ \rl
+UC-4 & Call a language model programmatically & A service account sends a request to the API proxy; the proxy anonymizes it, forwards it to the provider and restores the response & Service account \\ \rl
+UC-5 & Configure policies & The administrator selects the action for each data type and the services to which it applies & Administrator \\ \rl
+UC-6 & Review the log & The administrator or auditor filters log records and exports them; original values are not shown & Administrator, auditor \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Functional Requirements}
+
+Priorities follow the MoSCoW method: \emph{Must} requirements form the minimum viable product for the first release; \emph{Should} requirements are planned for the final version; \emph{Could} requirements are implemented if time allows. Each requirement has an acceptance criterion that is verified in the evaluation (see the document \emph{Evaluation Plan}).
+
+Missed personal data cannot be recalled once sent, whereas a false alarm only costs the user one click; however, frequent false alarms lead users to confirm without reading. Detection quality is therefore evaluated primarily by recall and by the F2 score, which weights recall twice as much as precision, under a minimum precision constraint. This also follows the user survey, in which 51\% of respondents preferred detecting all personal data even with occasional false alarms.
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{xltabular}{\linewidth}{P{1.3cm}LP{1.6cm}P{4.2cm}}
+\caption{Functional requirements}\label{tab:fr}\\
+\toprule
+\thead \textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Acceptance criterion} \\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\textit{Table \ref{tab:fr} (continued)}}\\
+\toprule
+\thead \textbf{ID} & \textbf{Requirement} & \textbf{Priority} & \textbf{Acceptance criterion} \\ \midrule
+\endhead
+\multicolumn{4}{l}{\textbf{FR-1. Detection of personal data}} \\*
+FR-1.1 & The system shall detect the data types in Table~\ref{tab:categories} in Kazakh, Russian and English text & Must & Recall $\geq 0.95$ and precision $\geq 0.95$ for structured identifiers (IIN/BIN, phone, e-mail, card, IBAN) on the test corpus \\ \rl
+FR-1.2 & The system shall detect names, addresses and organizations in each of the three languages & Must & Recall $\geq 0.85$ and precision $\geq 0.80$ for each language; F2 higher than the Presidio baseline \\ \rl
+FR-1.3 & The system shall detect personal data in mixed-language (code-switched) text & Must & Recall on the code-switched subset not lower than 0.05 below the average of the three languages \\ \rl
+FR-1.4 & The system shall return, for each detection, the type, the position in the text and a confidence score & Must & Present in every API response \\ \midrule
+\multicolumn{4}{l}{\textbf{FR-2. Validation of identifiers}} \\*
+FR-2.1 & IIN and BIN shall be validated by the check digit; IIN also by the date of birth & Must & No detections on 100 synthetic numbers with an invalid check digit \\ \rl
+FR-2.2 & Bank card numbers shall be validated by the Luhn algorithm and IBAN by the IBAN checksum & Must & No detections on 100 invalid synthetic numbers of each type \\ \midrule
+\multicolumn{4}{l}{\textbf{FR-3. Pseudonymization}} \\*
+FR-3.1 & Detected values shall be replaced with typed pseudonyms (\texttt{<PERSON\_1>}, \texttt{<IIN\_1>}, \ldots) & Must & Anonymized text contains no detected original values \\ \rl
+FR-3.2 & The same entity shall receive the same pseudonym within a request, including different word forms of a name (for example, ``Ivanov'', ``Ivanova'', ``Ivanovu'') & Must & 100\% consistency on test texts with repeated entities \\ \rl
+FR-3.3 & The mapping shall be stored on the server for the duration defined in NFR-2 and shall be available only to the request that created it & Must & Mapping is not accessible with another session token \\ \midrule
+\multicolumn{4}{l}{\textbf{FR-4. Restoration of responses}} \\*
+FR-4.1 & Pseudonyms in the AI response shall be replaced with the original values & Must & At least 95\% of test responses fully restored \\ \rl
+FR-4.2 & Restoration shall work for streamed responses, including pseudonyms split between fragments & Must & No unrestored or broken pseudonyms in streamed test responses \\ \rl
+FR-4.3 & Restoration shall tolerate inflected pseudonyms (for example, a suffix added by the model) & Should & At least 90\% of inflected pseudonyms restored \\ \rl
+FR-4.4 & The user shall be able to view the response as the AI service received it & Could & Switch available in the response view \\ \midrule
+\multicolumn{4}{l}{\textbf{FR-5. Browser extension}} \\*
+FR-5.1 & The extension shall intercept text before it is sent in the web interfaces of ChatGPT and Gemini & Must & Works in both services on the current version of their interfaces \\ \rl
+FR-5.2 & The extension shall highlight detected data and show them in a review list with type, value and pseudonym; detections below the confidence threshold shall be shown as suggestions that are not marked by default & Must & All detections are shown before sending; low-confidence detections visually distinguished \\ \rl
+FR-5.3 & The user shall be able to unmark a detection, change its type and mark missed data manually & Must & Each action is reflected in the anonymized text \\ \rl
+FR-5.4 & The user shall be able to preview the text that the AI service will receive & Should & Preview available before sending \\ \rl
+FR-5.5 & The extension shall support two modes: review before sending (default) and automatic replacement, if allowed by the administrator & Must & Mode switch in the extension window \\ \rl
+FR-5.6 & The user shall sign in with an organization account; the extension shall work only with the organization's server & Must & Requests without a valid token are rejected \\ \rl
+FR-5.7 & The extension interface shall be available in Kazakh, Russian and English & Should & All screens translated \\ \midrule
+\multicolumn{4}{l}{\textbf{FR-6. Processing policies}} \\*
+FR-6.1 & For each data type, the administrator shall select one action: replace, warn (replace after explicit confirmation) or block sending; blocking is triggered only by detections validated by a checksum or with high confidence & Must & The selected action is applied in the extension and the API proxy \\ \rl
+FR-6.2 & When sending is blocked, the user shall see which data type caused the block & Must & Message names the data type \\ \rl
+FR-6.3 & The administrator shall select the services (ChatGPT, Gemini, API proxy) to which policies apply and whether users may choose the automatic mode & Should & Settings applied without restarting the extension \\ \midrule
+\multicolumn{4}{l}{\textbf{FR-7. Administration, log and statistics}} \\*
+FR-7.1 & Each check shall be recorded in a log with time, user, service, data types, number of values and action, without original values & Must & No original values in the log on the test corpus \\ \rl
+FR-7.2 & The administrator and auditor shall be able to filter the log by period, data type and action and export it to CSV & Should & Filters and export available \\ \rl
+FR-7.3 & The administration panel shall show statistics: number of checks, hidden values, blocked requests, distribution by type and average latency & Should & Statistics for 7 days, 30 days and a quarter \\ \rl
+FR-7.4 & The administrator shall manage users and assign the roles in Table~\ref{tab:roles} & Must & Role restrictions enforced by the server \\ \rl
+FR-7.5 & The administrator shall configure the mapping retention period, the behaviour on failure and the NER confidence threshold & Should & Settings applied to new requests \\ \midrule
+\multicolumn{4}{l}{\textbf{FR-8. API proxy}} \\*
+FR-8.1 & The system shall provide an endpoint that anonymizes text and returns the anonymized text and detections & Must & Endpoint documented in OpenAPI \\ \rl
+FR-8.2 & The system shall provide a proxy compatible with the OpenAI and Gemini chat interfaces, including streaming, which anonymizes the request and restores the response & Should & An unmodified OpenAI client library works through the proxy \\ \rl
+FR-8.3 & Provider keys shall be stored on the server and never sent to clients & Must & No provider key in client traffic \\
+\bottomrule
+\end{xltabular}
+}
+
+\needspace{12\baselineskip}
+\section{Non-Functional Requirements}
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{xltabular}{\linewidth}{P{1.3cm}P{2.6cm}LP{4.2cm}}
+\caption{Non-functional requirements}\label{tab:nfr}\\
+\toprule
+\thead \textbf{ID} & \textbf{Quality} & \textbf{Requirement} & \textbf{Metric} \\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\textit{Table \ref{tab:nfr} (continued)}}\\
+\toprule
+\thead \textbf{ID} & \textbf{Quality} & \textbf{Requirement} & \textbf{Metric} \\ \midrule
+\endhead
+NFR-1 & Performance & Anonymization shall not noticeably delay the request & At most 1 s (95th percentile) for a text of up to 2,000 characters on a CPU server; restoration of a response at most 0.1 s \\ \rl
+NFR-2 & Security and privacy & Original values and the mapping shall not leave the organization; the mapping shall be encrypted and deleted automatically; original values shall not be written to logs; all traffic shall use HTTPS with token authentication & AES-256-GCM; mapping retention of at most 15 min (default 15 min); no original values in logs; JWT sessions expire after 30 min of inactivity \\ \rl
+NFR-3 & Deployability & The system shall be deployed on the organization's server & Started with a single Docker Compose command; no external services except the selected AI providers \\ \rl
+NFR-4 & Reliability & If the anonymization service is unavailable or does not respond in time, text shall not be sent unchecked (fail-closed); the administrator may switch to a warning mode & Sending is suspended when the server is stopped; timeout configurable (1, 3 or 5 s) \\ \rl
+NFR-5 & Usability & The review of detected data shall be quick and understandable & A new user completes UC-1 without help; task completion of at least 90\% in user testing; SUS score of at least 70 \\ \rl
+NFR-6 & Extensibility & Support for a new AI service shall be added as a separate extension adapter without changes to the server; new data types shall be added as recognizers & Claude adapter can be added without changing the detection core \\ \rl
+NFR-7 & Maintainability & Code shall be covered by automated tests and documented & At least 70\% test coverage of the server; OpenAPI documentation generated automatically \\ \rl
+NFR-8 & Compliance & Processing shall follow the principles of the Law on Personal Data: minimization, limited retention and processing within the organization~\cite{law} & Requirements NFR-2 and FR-7.1 satisfied \\
+\bottomrule
+\end{xltabular}
+}
+
+\section{Constraints and Assumptions}
+
+\begin{itemize}
+\item Only text is processed; images, PDF files, audio and video are out of scope.
+\item The browser extension is developed for Chromium-based browsers (Manifest V3).
+\item Changes in the web interfaces of ChatGPT and Gemini may require updates of the extension adapters; the API proxy is the stable alternative.
+\item Detection quality is evaluated only on a synthetic corpus with fictitious identifiers in a valid format; real personal data are not used.
+\item The NER model must run on a CPU server without a graphics processor.
+\item Detection cannot be complete: the review step (FR-5.2, FR-5.3) and the policies (FR-6) reduce the risk of missed data but do not eliminate it. Quasi-identifiers and attribute inference~\cite{lukas} are not addressed by this system.
+\end{itemize}
+
+\needspace{18\baselineskip}
+\section{Requirements Derived from the User Survey}
+
+The survey results described in the document \emph{Evidence of Relevance} refined several requirements (Table~\ref{tab:survey}).
+
+\begin{table}[H]
+\caption{Survey findings and resulting requirements}\label{tab:survey}
+\small
+\begin{tabularx}{\linewidth}{LP{6.2cm}}
+\toprule
+\thead \textbf{Finding} & \textbf{Requirement} \\ \midrule
+71\% of respondents use several languages or mix them in one prompt; 77\% use Kazakh or mixed prompts & FR-1.1, FR-1.3: Kazakh, Russian, English and code-switched text \\ \rl
+51\% prefer detecting all personal data even with occasional false alarms & FR-1: recall-oriented evaluation (F2 with a minimum precision); FR-5.2: low-confidence suggestions; FR-5.3: manual marking of missed data \\ \rl
+57\% want to review and confirm detected data before sending; 14\% prefer fully automatic replacement & FR-5.5: review mode by default, automatic mode as an option \\ \rl
+89\% accept an additional delay of at least 1--3 s & NFR-1: target of 1 s is sufficient \\ \rl
+Claude is used by 63\% of respondents & NFR-6: adapter-based architecture for new services \\ \rl
+54\% want a detection log and per-type rules; 50\% consider processing within the organization important & FR-6, FR-7, NFR-2, NFR-3 \\ \rl
+Six respondents named concerns about confidentiality and trust in the tool itself & NFR-2: no original values in logs; encrypted, short-lived mapping \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\needspace{18\baselineskip}
+\section{Traceability}
+
+Table~\ref{tab:trace} links the requirements to the project objectives, the screens of the user interface prototype and the technology decisions.
+
+\begin{table}[H]
+\caption{Traceability matrix}\label{tab:trace}
+\small
+\begin{tabularx}{\linewidth}{P{1.4cm}P{2.6cm}P{3.4cm}L}
+\toprule
+\thead \textbf{Req.} & \textbf{Objective} & \textbf{Prototype screens} & \textbf{Technology decision} \\ \midrule
+FR-1 & 3 & U1, U6, U7 & Hybrid detection: rules, XLM-R NER, gazetteer \\ \rl
+FR-2 & 3 & U1, A3 & Custom Presidio recognizers with checksums \\ \rl
+FR-3 & 4, 5 & U2, U3 & Redis mapping store \\ \rl
+FR-4 & 4, 6 & U4, P1 & FastAPI streaming \\ \rl
+FR-5 & 7 & U1--U3, U6, U7, X1, X2 & Browser extension (Manifest V3) \\ \rl
+FR-6 & 7 & U2, U5, A3 & PostgreSQL (policies) \\ \rl
+FR-7 & 5, 7 & A1--A6 & PostgreSQL (log, users) \\ \rl
+FR-8 & 6 & P1 & REST over HTTPS, OpenAI-compatible proxy \\ \rl
+NFR-1 & --- & U3, A2 & FastAPI, encoder NER model \\ \rl
+NFR-2 & 5 & A4, A6, X2 & Redis with expiry, AES, JWT \\ \rl
+NFR-3 & --- & A6 & Docker Compose \\ \rl
+NFR-4 & --- & U8, A6 & Extension fail-closed mode \\ \rl
+NFR-5 & 7 & U1--U8 & --- \\ \rl
+NFR-6 & --- & X1, A6 & Extension adapters \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{thebibliography}{99}
+\bibitem{law} Law of the Republic of Kazakhstan No.~94-V ``On Personal Data and Their Protection'', 21 May 2013 (current edition). [Online]. Available: \url{https://adilet.zan.kz/rus/docs/Z1300000094}
+\bibitem{casper} C. J. Chong, C. Hou, Z. Yao, and S. M. S. Talebi, ``Casper: Prompt sanitization for protecting user privacy in web-based large language models,'' in \emph{Proc. IEEE 12th Int. Conf. on Cyber Security and Cloud Computing (CSCloud)}, 2025, pp. 122--131, \doi{10.1109/CSCloud66326.2025.00027}.
+\bibitem{promptshield} A. I. Asimine, F. Salhab Doria Ricardo, F. Torgo, G. Choudhary, and N. Dragoni, ``PromptShield: Protecting user privacy in AI chatbots,'' \emph{Software}, vol.~5, no.~2, art.~24, 2026, \doi{10.3390/software5020024}.
+\bibitem{kaznerd} R. Yeshpanov, Y. Khassanov, and H. A. Varol, ``KazNERD: Kazakh named entity recognition dataset,'' in \emph{Proc. LREC}, 2022, pp. 417--426. [Online]. Available: \url{https://aclanthology.org/2022.lrec-1.44}
+\bibitem{presidio} Microsoft, ``Presidio: Data protection and de-identification SDK,'' documentation. [Online]. Available: \url{https://presidio.dataprivacystack.org/}
+\bibitem{lukas} N. Lukas, A. Salem, R. Sim, S. Tople, L. Wutschitz, and S. Zanella-Béguelin, ``Analyzing leakage of personally identifiable information in language models,'' in \emph{Proc. IEEE Symposium on Security and Privacy}, 2023, pp. 346--363, \doi{10.1109/SP46215.2023.10179300}.
+\end{thebibliography}
+
+\end{document}
