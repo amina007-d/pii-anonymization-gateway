@@ -1,0 +1,65 @@
+
+Recall by entity type
+          A: default (en) masked        A: default (en) correct type      B: + ru/multilingual masked   B: + ru/multilingual correct type 
+ADDRESS   2/3 (0.67)                    0/3 (0.00)                        1/3 (0.33)                    0/3 (0.00)                        
+CARD      3/3 (1.00)                    3/3 (1.00)                        3/3 (1.00)                    3/3 (1.00)                        
+EMAIL     5/5 (1.00)                    5/5 (1.00)                        5/5 (1.00)                    5/5 (1.00)                        
+IBAN      3/3 (1.00)                    3/3 (1.00)                        3/3 (1.00)                    3/3 (1.00)                        
+IIN       6/6 (1.00)                    0/6 (0.00)                        1/6 (0.17)                    0/6 (0.00)                        
+LOCATION  3/4 (0.75)                    1/4 (0.25)                        4/4 (1.00)                    2/4 (0.50)                        
+ORG       1/1 (1.00)                    0/1 (0.00)                        1/1 (1.00)                    1/1 (1.00)                        
+PERSON    10/18 (0.56)                  9/18 (0.50)                       18/18 (1.00)                  17/18 (0.94)                      
+PHONE     8/8 (1.00)                    5/8 (0.62)                        8/8 (1.00)                    8/8 (1.00)                        
+
+Recall by language
+          A: default (en) masked        A: default (en) correct type      B: + ru/multilingual masked   B: + ru/multilingual correct type 
+kk        12/14 (0.86)                  7/14 (0.50)                       12/14 (0.86)                  10/14 (0.71)                      
+ru        11/15 (0.73)                  5/15 (0.33)                       12/15 (0.80)                  12/15 (0.80)                      
+en        9/10 (0.90)                   8/10 (0.80)                       10/10 (1.00)                  8/10 (0.80)                       
+mix       9/12 (0.75)                   6/12 (0.50)                       10/12 (0.83)                  9/12 (0.75)                       
+
+A: default (en): masked 41/51 (0.80), correct type 26/51 (0.51), false positives 4
+   miss [kk] IIN      950101400002                 wrong type: DATE_TIME, US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [kk] PERSON   Қайрат Серікбаевқа           -
+   miss [kk] LOCATION Астана                       wrong type: PERSON
+   miss [kk] ADDRESS  Абай даңғылы 12              wrong type: PERSON
+   miss [kk] PERSON   Әсем Бекова                  -
+   miss [kk] PHONE    8 777 345 67 89              wrong type: DATE_TIME
+   miss [kk] IIN      880512300005                 wrong type: US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [ru] PERSON   Иванова Сергея Петровича     -
+   miss [ru] IIN      850315300009                 wrong type: US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [ru] PERSON   Мария Ким                    -
+   miss [ru] LOCATION Алматы                       wrong type: PERSON
+   miss [ru] ADDRESS  ул. Сатпаева, д. 5, кв. 10   wrong type: PERSON
+   miss [ru] ORG      ТОО «Альфа Сервис»           wrong type: PERSON
+   miss [ru] PERSON   Ахметову Тимуру              -
+   miss [ru] PERSON   Ольгу Смирнову               -
+   miss [ru] IIN      020730500005                 wrong type: US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [ru] PHONE    87071234567                  wrong type: US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [en] PERSON   Aliya Sultanova              -
+   miss [en] IIN      970214400000                 wrong type: US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [mix] PERSON   Айжан Мұратқызы              -
+   miss [mix] IIN      910405300001                 wrong type: US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [mix] LOCATION Қарағанды                    -
+   miss [mix] ADDRESS  ул. Ерубаева 20              -
+   miss [mix] PHONE    8 701 999 88 77              wrong type: DATE_TIME
+   miss [mix] PERSON   Санжар Омаров                wrong type: LOCATION
+   FP   [ru] LOCATION         Составь
+   FP   [ru] PERSON           Клиентка
+   FP   [ru] PERSON           адресу
+   FP   [mix] PERSON           Привет
+
+B: + ru/multilingual: masked 44/51 (0.86), correct type 39/51 (0.76), false positives 1
+   miss [kk] IIN      950101400002                 -
+   miss [kk] LOCATION Астана                       wrong type: PERSON
+   miss [kk] ADDRESS  Абай даңғылы 12              wrong type: PERSON
+   miss [kk] IIN      880512300005                 -
+   miss [ru] IIN      850315300009                 -
+   miss [ru] ADDRESS  ул. Сатпаева, д. 5, кв. 10   -
+   miss [ru] IIN      020730500005                 -
+   miss [en] PERSON   Aliya Sultanova              wrong type: ORGANIZATION
+   miss [en] IIN      970214400000                 wrong type: ORGANIZATION, US_BANK_NUMBER, US_DRIVER_LICENSE
+   miss [mix] IIN      910405300001                 -
+   miss [mix] LOCATION Қарағанды                    wrong type: PERSON
+   miss [mix] ADDRESS  ул. Ерубаева 20              -
+   FP   [kk] PERSON           ЖСН
