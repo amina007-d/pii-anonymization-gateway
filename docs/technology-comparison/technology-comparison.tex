@@ -1,0 +1,299 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\begin{document}
+\maketitlepage{Technology Comparison}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This document justifies the key technology decisions of the project. For each decision, two or three reasonable alternatives are compared against criteria derived from the project requirements, and the evaluation is supported by technical documentation and by evidence from the literature. Six decisions are considered: the server platform, data storage (main database and pseudonym mapping store), the personal data detection method, the named entity recognition (NER) model, the method of component interaction, and the client type.
+
+\section{Requirements Used for the Decisions}
+
+The decisions are based on the key requirements listed in Table~\ref{tab:req}. The complete specification is given in the document \emph{Requirements Specification}.
+
+\begin{table}[htbp]
+\caption{Key requirements used for the technology decisions}\label{tab:req}
+\small
+\begin{tabularx}{\linewidth}{C{1.2cm}LP{5.4cm}}
+\toprule
+\thead \textbf{ID} & \textbf{Requirement} & \textbf{Acceptance criterion} \\ \midrule
+FR-1 & Detect personal data (names, IIN/BIN, phone number, e-mail, address, card number, IBAN) in Kazakh, Russian, English and mixed text & Recall $\geq$ 0.95 for structured identifiers on the test corpus \\ \rl
+FR-2 & Validate IIN/BIN and card numbers by checksum & No false detections on 100 invalid synthetic numbers \\ \rl
+FR-3 & Replace detected data with pseudonyms; the same entity receives the same pseudonym within a text & 100\% consistency on test texts with repeated entities \\ \rl
+FR-4 & Restore the original values in the response of the AI service & At least 95\% of responses fully restored \\ \rl
+FR-5 & Intercept text before it is sent to ChatGPT or Gemini and let the user confirm the detected data & Works in the web interfaces of both services \\ \rl
+NFR-1 & Low added latency & At most 1 s for a text of up to 2,000 characters \\ \rl
+NFR-2 & Original data and the pseudonym mapping never leave the organization; the mapping is encrypted and deleted automatically & AES encryption; retention of at most 15 min; no original values in logs \\ \rl
+NFR-3 & On-premise deployment & Started with a single Docker Compose command \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Evaluation Method}
+
+Each alternative is rated against each criterion on a scale from 1 (poor) to 5 (excellent). Each criterion has a weight that reflects the priority of the related requirement: 3 for a mandatory requirement, 2 for a desirable one, and 1 for an additional consideration. The total score of an alternative is the sum of the products of weights and ratings. In the tables below, the weight is given in parentheses after each criterion, and the rating is followed by a short justification.
+
+\section{Decision 1: Server Platform}
+
+\begin{table}[htbp]
+\caption{Comparison of server platforms}\label{tab:d1}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{4.2cm}LLL}
+\toprule
+\thead \textbf{Criterion (weight)} & \textbf{FastAPI (Python)} & \textbf{Express (Node.js)} & \textbf{Django REST Framework (Python)} \\ \midrule
+Native use of Presidio, spaCy and Transformers, FR-1 (3) & 5 --- same language & 2 --- requires a separate Python service and an extra network call & 5 --- same language \\ \rl
+Asynchronous input/output and streaming of responses, FR-4, NFR-1 (3) & 5 --- asynchronous by design; streaming responses~\cite{fastapi} & 5 --- event loop, native streams & 3 --- asynchronous views require ASGI; ORM transactions are not asynchronous~\cite{django} \\ \rl
+Automatic API documentation (2) & 5 --- OpenAPI documentation generated from code~\cite{fastapi} & 3 --- requires additional packages & 4 --- through extensions \\ \rl
+Lightweight framework for a gateway service (1) & 5 & 5 & 3 --- full-stack framework \\ \rl
+Team experience (1) & 3 & 5 --- previous projects & 3 \\ \midrule
+\textbf{Weighted total} & \textbf{48} & \textbf{37} & \textbf{38} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+FastAPI is selected (Table~\ref{tab:d1}). The detection core depends on Python libraries (FR-1), and FastAPI executes them in the same process, supports streaming of language model responses (FR-4) and generates OpenAPI documentation automatically. A Python server is also used by the closest middleware prototype described in the literature~\cite{promptshield}. The team has more experience with Express; this disadvantage is accepted because Express would require two runtime environments and an additional internal call for each request, which conflicts with NFR-1.
+
+\section{Decision 2: Data Storage}
+
+\subsection{Main Database}
+
+The main database stores users, roles, policies and detection logs. The alternatives are compared in Table~\ref{tab:d2a}.
+
+\begin{table}[htbp]
+\caption{Comparison of main database options}\label{tab:d2a}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{4.6cm}LLL}
+\toprule
+\thead \textbf{Criterion (weight)} & \textbf{PostgreSQL} & \textbf{MongoDB} & \textbf{SQLite} \\ \midrule
+Structured, related data (users, roles, policies, logs) (3) & 5 --- relational schema with constraints & 3 --- documents; relations handled in code & 4 --- relational \\ \rl
+Reporting on logs for the administration panel (2) & 5 --- SQL aggregation & 3 --- aggregation pipeline & 4 --- SQL \\ \rl
+Concurrent access from several workers, NFR-1 (2) & 5 & 5 & 2 --- single writer, file-based \\ \rl
+Docker and on-premise deployment, NFR-3 (2) & 5 & 5 & 5 \\ \rl
+Team experience (1) & 4 & 5 & 3 \\ \midrule
+\textbf{Weighted total} & \textbf{49} & \textbf{40} & \textbf{37} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+PostgreSQL is selected because the data are structured and the administration panel requires aggregated reports. Its schema is less flexible than that of MongoDB; policies with variable fields can be stored in JSONB columns.
+
+\subsection{Pseudonym Mapping Store}
+
+The mapping store keeps the correspondence between original values and pseudonyms for the duration of a request. The alternatives are compared in Table~\ref{tab:d2b}.
+
+\begin{table}[htbp]
+\caption{Comparison of pseudonym mapping store options}\label{tab:d2b}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{4.6cm}LLL}
+\toprule
+\thead \textbf{Criterion (weight)} & \textbf{Redis} & \textbf{PostgreSQL table} & \textbf{In-process memory} \\ \midrule
+Automatic deletion after expiry, NFR-2 (3) & 5 --- keys are deleted automatically after the timeout~\cite{redis} & 2 --- requires a scheduled cleanup job & 3 --- custom timer; lost on restart \\ \rl
+Fast reading and writing on every request, NFR-1 (3) & 5 --- in-memory & 3 --- disk-based & 5 \\ \rl
+Shared between several workers (2) & 5 & 5 & 1 --- each worker has its own memory \\ \rl
+Data not stored longer than necessary, NFR-2 (3) & 4 --- persistence can be disabled & 2 --- stored on disk and in backups & 5 \\ \midrule
+\textbf{Weighted total} & \textbf{52} & \textbf{31} & \textbf{41} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Redis is selected, with an expiry time for each key and values encrypted with AES by the application before storage. Limited retention of personal data is also expected by users~\cite{promptshield}. The cost of this decision is one additional service in the deployment.
+
+\section{Decision 3: Personal Data Detection Method}
+
+\begin{table}[htbp]
+\caption{Comparison of personal data detection methods}\label{tab:d3}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{3.4cm}LLLL}
+\toprule
+\thead \textbf{Criterion (weight)} & \textbf{Rules only (patterns and checksums)} & \textbf{NER only (spaCy or XLM-R)} & \textbf{Detection by a large language model} & \textbf{Hybrid: rules and NER} \\ \midrule
+Structured identifiers (IIN/BIN, phone, card, IBAN), FR-1, FR-2 (3) & 5 --- exact patterns with checksums & 1 --- IIN was never typed correctly in the Presidio experiment & 3 --- no checksum validation & 5 \\ \rl
+Names, locations and organizations in Kazakh, Russian and English, FR-1 (3) & 1 --- cannot generalize & 4 --- XLM-R F1 of 97.22\% on Kazakh NER~\cite{kaznerd} & 4 --- high recall (0.96)~\cite{ji}, but requires fine-tuning and an external service & 4 \\ \rl
+Latency, NFR-1 (3) & 5 --- 0.1--10 ms~\cite{casper, hsine} & 4 --- encoder model 0.15--0.2 s~\cite{casper, hsine} & 1 --- local generative model 2--3.2 s per prompt~\cite{casper, hsine} & 4 \\ \rl
+Data remain within the organization, NFR-2 (3) & 5 & 5 & 2 --- external service or a large local model (about 6 GB of GPU memory~\cite{casper}) & 5 \\ \midrule
+\textbf{Weighted total} & \textbf{48} & \textbf{42} & \textbf{30} & \textbf{54} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The literature supports the ratings in Table~\ref{tab:d3}. Regular expressions without checksum validation reached only 7.5\% precision for IBAN codes~\cite{subramani}, whereas validated rules are used successfully in recent middleware~\cite{hsine}. XLM-R is the best model on the Kazakh NER dataset~\cite{kaznerd} and on Korean personal data (F1 of 0.89)~\cite{kdpii}, but NER alone performs worst on language-specific identifiers~\cite{kdpii}. Detection by a large language model is the most accurate in a recent comparison~\cite{ji}; however, pseudonymization performed by language models leaked 35.5\% of personal data compared with 10.2\% for an NER-based approach~\cite{yermilov}, and the best results require sending data to the provider. All three recent systems for the protection of prompts combine rules with a neural model~\cite{casper, promptshield, hsine}.
+
+The hybrid approach is therefore selected: validated pattern recognizers for structured identifiers (IIN/BIN with checksum, phone numbers in Kazakhstan formats, card numbers with the Luhn algorithm, Kazakhstan IBAN), an XLM-R-based NER model for names, locations and organizations, and a gazetteer of Kazakh names, since names of non-European origin are missed more often by standard tools~\cite{ji}. Presidio is used as the framework for the recognizers and as the evaluation baseline. Two components have to be maintained, and quasi-identifiers and attribute inference remain outside the scope of the project.
+
+\section{Decision 4: Named Entity Recognition Model}
+
+\begin{table}[htbp]
+\caption{Comparison of NER models}\label{tab:d4}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{3.6cm}LLL}
+\toprule
+\thead \textbf{Criterion (weight)} & \textbf{XLM-RoBERTa-base, fine-tuned on KazNERD and Russian data} & \textbf{Multilingual BERT, fine-tuned} & \textbf{spaCy models (Russian and multilingual)} \\ \midrule
+Quality on Kazakh, FR-1 (3) & 5 --- F1 of 97.22\% on KazNERD~\cite{kaznerd} & 4 --- F1 of 96.24\% on KazNERD~\cite{kaznerd} & 2 --- correct-type recall of 0.71 in the Presidio experiment \\ \rl
+Quality on Russian, FR-1 (3) & 4 --- strong multilingual model; best model family on KDPII~\cite{kdpii} & 4 & 3 --- recall of 0.80 in the Presidio experiment \\ \rl
+Code-switched text, FR-1 (2) & 5 --- pretrained on web text in 100 languages, including 6.4 GiB of Kazakh~\cite{xlmr} & 3 --- pretrained on Wikipedia only & 2 --- separate model for each language \\ \rl
+Latency on CPU, NFR-1 (3) & 4 --- encoder, single forward pass (about 0.15 s~\cite{hsine}) & 4 & 5 \\ \rl
+Model size and resources (2) & 3 --- about 280 million parameters & 4 --- about 180 million parameters & 5 \\ \rl
+Integration with Presidio (2) & 4 --- through the Transformers NLP engine & 4 --- same & 5 --- native \\ \midrule
+\textbf{Weighted total} & \textbf{63} & \textbf{58} & \textbf{54} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+XLM-RoBERTa-base, fine-tuned on KazNERD and Russian NER data, is selected (Table~\ref{tab:d4}); multilingual BERT is kept as a fallback in case the latency target is not met. XLM-R is also the backbone of the closest middleware prototype~\cite{promptshield} and the best model family on KDPII~\cite{kdpii}. The model requires more memory than the spaCy models, and its advantage over multilingual BERT is small, so both will be measured on the project test corpus.
+
+\section{Decision 5: Component Interaction}
+
+\begin{table}[htbp]
+\caption{Comparison of component interaction methods}\label{tab:d5}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{4.2cm}LLL}
+\toprule
+\thead \textbf{Criterion (weight)} & \textbf{REST over HTTP with JSON (streaming via chunked responses or SSE)} & \textbf{gRPC} & \textbf{Message queue (e.g. RabbitMQ)} \\ \midrule
+Callable from a browser extension, FR-5 (3) & 5 --- native \texttt{fetch} & 2 --- browsers require gRPC-Web and a proxy~\cite{grpcweb} & 1 --- not callable from a browser directly \\ \rl
+Synchronous request and response with low latency, NFR-1 (3) & 4 & 5 & 2 --- asynchronous by design \\ \rl
+Compatibility with provider interfaces (OpenAI and Gemini use HTTP and JSON), FR-4 (3) & 5 & 2 --- requires a translation layer & 1 \\ \rl
+Simplicity and documentation (2) & 5 & 3 & 2 \\ \midrule
+\textbf{Weighted total} & \textbf{52} & \textbf{33} & \textbf{16} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+REST over HTTPS with JSON is selected, with streaming for language model responses (Table~\ref{tab:d5}). Its payloads are larger than those of gRPC, which is negligible for text prompts.
+
+\section{Decision 6: Client Type}
+
+\begin{table}[htbp]
+\caption{Comparison of client types}\label{tab:d6}
+\footnotesize
+\begin{tabularx}{\linewidth}{P{4.2cm}LLL}
+\toprule
+\thead \textbf{Criterion (weight)} & \textbf{Browser extension} & \textbf{Separate web application} & \textbf{API proxy only} \\ \midrule
+Works where users already use ChatGPT or Gemini, FR-5 (3) & 5 --- content scripts can read and modify web pages~\cite{chrome}; feasibility shown by Casper~\cite{casper} & 2 --- the user copies text to another site (the PromptShield model~\cite{promptshield}) & 1 --- only for programmatic use, not for web interfaces \\ \rl
+User can review detected data before sending, FR-5 (3) & 5 & 5 & 1 \\ \rl
+Works for internal applications that use language model APIs (2) & 2 & 2 & 5 \\ \rl
+Robustness to changes in the ChatGPT or Gemini interface (2) & 2 --- page selectors may break & 5 & 5 \\ \midrule
+\textbf{Weighted total} & \textbf{38} & \textbf{35} & \textbf{26} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A browser extension (Manifest V3) is selected, complemented by an API proxy as a second entry point for programmatic use (Table~\ref{tab:d6}). Unlike Casper~\cite{casper}, the NER model runs on the organization's server, so the extension remains lightweight and requires no GPU on user machines. Changes in the interfaces of AI services may break interception, and Casper reports limitations of the browser interface when intercepting submission; therefore, support is limited to two services, and the proxy remains a stable alternative.
+
+\section{Summary of the Selected Technology Stack}
+
+\begin{table}[htbp]
+\caption{Selected technology stack}\label{tab:stack}
+\small
+\begin{tabularx}{\linewidth}{P{3.2cm}LP{3.8cm}}
+\toprule
+\thead \textbf{Layer} & \textbf{Choice} & \textbf{Main requirements} \\ \midrule
+Server & Python, FastAPI & FR-1, FR-4, NFR-1 \\ \rl
+Detection & Presidio framework, custom Kazakhstan recognizers with checksums, XLM-R NER model, Kazakh name gazetteer & FR-1, FR-2 \\ \rl
+Main database & PostgreSQL & Administration panel, logs \\ \rl
+Mapping store & Redis with expiry and AES encryption & NFR-2 \\ \rl
+Interaction & REST over HTTPS with JSON, streaming & FR-4, FR-5 \\ \rl
+Client & Browser extension (Manifest V3) and API proxy & FR-5 \\ \rl
+Deployment & Docker Compose & NFR-3 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{thebibliography}{99}
+\bibitem{fastapi} FastAPI, ``Custom response --- HTML, stream, file, others,'' documentation. [Online]. Available: \url{https://fastapi.tiangolo.com/advanced/custom-response/}
+\bibitem{django} Django Software Foundation, ``Asynchronous support,'' Django documentation. [Online]. Available: \url{https://docs.djangoproject.com/en/stable/topics/async/}
+\bibitem{promptshield} A. I. Asimine, F. Salhab Doria Ricardo, F. Torgo, G. Choudhary, and N. Dragoni, ``PromptShield: Protecting user privacy in AI chatbots,'' \emph{Software}, vol.~5, no.~2, art.~24, 2026, \doi{10.3390/software5020024}.
+\bibitem{redis} Redis, ``EXPIRE,'' command reference. [Online]. Available: \url{https://redis.io/docs/latest/commands/expire/}
+\bibitem{kaznerd} R. Yeshpanov, Y. Khassanov, and H. A. Varol, ``KazNERD: Kazakh named entity recognition dataset,'' in \emph{Proc. LREC}, 2022, pp. 417--426. [Online]. Available: \url{https://aclanthology.org/2022.lrec-1.44}
+\bibitem{ji} Z. Ji, K. R. Koedinger, Y. Shen, and J. Lin, ``Enhancing the de-identification of personally identifiable information in educational data,'' \emph{Journal of Educational Data Mining}, vol.~17, no.~2, pp. 55--85, 2025. [Online]. Available: \url{https://jedm.educationaldatamining.org/index.php/JEDM/article/view/936}
+\bibitem{casper} C. J. Chong, C. Hou, Z. Yao, and S. M. S. Talebi, ``Casper: Prompt sanitization for protecting user privacy in web-based large language models,'' in \emph{Proc. IEEE 12th Int. Conf. on Cyber Security and Cloud Computing (CSCloud)}, 2025, pp. 122--131, \doi{10.1109/CSCloud66326.2025.00027}.
+\bibitem{hsine} A. A. Hsine and A. Arabo, ``A privacy-preserving middleware architecture for detecting prompt injection and sensitive data exposure in large-language-model interactions,'' \emph{Electronics}, vol.~15, no.~16, art.~3554, 2026, \doi{10.3390/electronics15163554}.
+\bibitem{subramani} N. Subramani, S. Luccioni, J. Dodge, and M. Mitchell, ``Detecting personal information in training corpora: an analysis,'' in \emph{Proc. 3rd Workshop on Trustworthy Natural Language Processing (TrustNLP)}, 2023, pp. 208--220, \doi{10.18653/v1/2023.trustnlp-1.18}.
+\bibitem{kdpii} L. Fei, Y. Kang, S. Park, Y. Jang, J. Lee, and H. Kim, ``KDPII: A new Korean dialogic dataset for the deidentification of personally identifiable information,'' \emph{IEEE Access}, vol.~12, pp. 135626--135641, 2024, \doi{10.1109/ACCESS.2024.3461804}.
+\bibitem{yermilov} O. Yermilov, V. Raheja, and A. Chernodub, ``Privacy- and utility-preserving NLP with anonymized data: A case study of pseudonymization,'' in \emph{Proc. 3rd Workshop on Trustworthy Natural Language Processing (TrustNLP)}, 2023, \doi{10.18653/v1/2023.trustnlp-1.20}.
+\bibitem{xlmr} A. Conneau, K. Khandelwal, N. Goyal, V. Chaudhary, G. Wenzek, F. Guzmán, E. Grave, M. Ott, L. Zettlemoyer, and V. Stoyanov, ``Unsupervised cross-lingual representation learning at scale,'' in \emph{Proc. ACL}, 2020, pp. 8440--8451, \doi{10.18653/v1/2020.acl-main.747}.
+\bibitem{grpcweb} gRPC Authors, ``gRPC-Web basics tutorial.'' [Online]. Available: \url{https://grpc.io/docs/platforms/web/basics/}
+\bibitem{chrome} Google, ``Content scripts,'' Chrome Extensions documentation. [Online]. Available: \url{https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts}
+\end{thebibliography}
+
+\end{document}
