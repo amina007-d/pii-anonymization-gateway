@@ -1,0 +1,223 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\usepackage{float}
+\usepackage{pgfgantt}
+\usepackage{pdflscape}
+\begin{document}
+\maketitlepage{Project Plan and Risks}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This document presents the plan of the diploma project from October 2026 to May 2027: the phases and milestones, the distribution of work between the team members, the working process and the risk register. The plan is maintained in the YouTrack project and is updated after each pre-defense and after meetings with the supervisor.
+
+\section{Phases and Milestones}
+
+The work is divided into seven phases (Table~\ref{tab:phases}). The order follows the principle ``minimum viable product first'': the rule-based detection and the server interface are implemented first, because they already provide measurable results; the NER model, the browser extension and the administration panel are added on top of them.
+
+\begin{table}[H]
+\caption{Project phases}\label{tab:phases}
+\small
+\begin{tabularx}{\linewidth}{P{0.8cm}P{4.0cm}P{2.6cm}L}
+\toprule
+\thead \textbf{No.} & \textbf{Phase} & \textbf{Period} & \textbf{Main results} \\ \midrule
+0 & Analysis and design & Sep -- Oct 2026 & Proposal, literature review, comparisons, survey, requirements, prototype, diagrams; pre-defense 1 \\ \rl
+1 & Feasibility check and test data & Nov 2026 & NER model fine-tuned on KazNERD and checked on 100 synthetic sentences; corpus generator; first usability test of the prototype \\ \rl
+2 & Detection core and server (MVP) & Nov -- Dec 2026 & Rule recognizers with checksums, pseudonymization and restoration, Redis, REST API, unit tests \\ \rl
+3 & NER integration & Dec 2026 -- Jan 2027 & NER model, gazetteer, merging of results, threshold tuning on the development set \\ \rl
+4 & Browser extension & Dec 2026 -- Feb 2027 & Interception in ChatGPT, review list, restoration; Gemini adapter; pre-defense 2 (demonstration of the MVP) \\ \rl
+5 & Proxy and administration & Feb -- Mar 2027 & API proxy with streaming, policies, administration panel, log, roles, Docker Compose deployment \\ \rl
+6 & Evaluation & Mar -- Apr 2027 & Experiments 1--7 of the evaluation plan, second usability test, corrections \\ \rl
+7 & Thesis and defense & Mar -- May 2027 & Thesis text, final pre-defense, preparation for the defense \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The dates of pre-defense 2 and the final pre-defense are set by the university; the plan assumes February 2027 and May 2027 respectively and will be adjusted when the dates are announced.
+
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\begin{ganttchart}[
+  hgrid, vgrid={*1{draw=black!15}},
+  x unit=0.95cm, y unit chart=0.52cm, y unit title=0.6cm,
+  title height=1, title label font=\small\bfseries,
+  bar height=0.55, bar/.append style={fill=teal!45, draw=teal!70!black},
+  bar label font=\small, group label font=\small\bfseries,
+  group/.append style={fill=teal!80!black},
+  milestone/.append style={fill=orange!80!red, draw=orange!60!black},
+  milestone label font=\small\itshape,
+  progress label text={}, bar incomplete/.append style={fill=teal!45}
+]{1}{16}
+\gantttitle{2026}{6} \gantttitle{2027}{10} \\
+\gantttitle{Oct}{2} \gantttitle{Nov}{2} \gantttitle{Dec}{2} \gantttitle{Jan}{2} \gantttitle{Feb}{2} \gantttitle{Mar}{2} \gantttitle{Apr}{2} \gantttitle{May}{2} \\
+\ganttgroup{Analysis and design}{1}{2} \\
+\ganttbar{Documents and prototype}{1}{2} \\
+\ganttmilestone{Pre-defense 1 (24 Oct)}{2} \\
+\ganttgroup{Detection core and server}{3}{8} \\
+\ganttbar{NER feasibility check}{3}{3} \\
+\ganttbar{Corpus generator, annotation}{3}{6} \\
+\ganttbar{Rule recognizers, checksums}{3}{4} \\
+\ganttbar{Pseudonymization, restoration, Redis}{4}{6} \\
+\ganttbar{NER integration, gazetteer}{5}{8} \\
+\ganttgroup{Clients and administration}{5}{12} \\
+\ganttbar{Extension: ChatGPT}{5}{8} \\
+\ganttbar{Extension: Gemini, review UI}{8}{10} \\
+\ganttmilestone{Pre-defense 2 (MVP)}{10} \\
+\ganttbar{API proxy, streaming}{9}{10} \\
+\ganttbar{Policies, admin panel, log}{10}{12} \\
+\ganttgroup{Evaluation}{3}{14} \\
+\ganttbar{Usability test 1 (prototype)}{3}{4} \\
+\ganttbar{Experiments 1--6}{12}{14} \\
+\ganttbar{Usability test 2 (extension)}{13}{13} \\
+\ganttgroup{Thesis}{11}{16} \\
+\ganttbar{Thesis writing}{11}{16} \\
+\ganttmilestone{Final pre-defense}{15}
+\end{ganttchart}
+\caption{Schedule of the project (each column is half a month)}\label{fig:gantt}
+\end{figure}
+\end{landscape}
+
+\section{Distribution of Work}
+
+The distribution of work follows the roles defined in the project proposal. Both members review each other's pull requests, take part in annotation of the corpus and in usability testing, and write the corresponding chapters of the thesis.
+
+\begin{table}[H]
+\caption{Responsibilities of the team members}\label{tab:roles}
+\small
+\begin{tabularx}{\linewidth}{P{3.6cm}L}
+\toprule
+\thead \textbf{Member} & \textbf{Responsibilities} \\ \midrule
+Dossan Amina (team lead, server side) & Requirements, architecture and diagrams; detection core (rules, NER model, gazetteer); pseudonymization and restoration; Redis and PostgreSQL; REST API and LLM proxy; Admin API; deployment; security tests; UX prototype \\ \rl
+Abzhamal Nazerke (client side, evaluation) & Existing system comparison, user survey; browser extension; administration panel interface; corpus generator and annotation; evaluation experiments; usability testing; project plan and supervisor feedback log \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Working Process}
+
+\begin{itemize}
+\item \emph{Tasks}: every work item is a YouTrack task with an identifier \texttt{DIP-<n>}; work is organized in two-week sprints with a short planning at the start and a review at the end of each sprint.
+\item \emph{Version control}: each task is developed in a separate branch named after the task; commits start with the task identifier; changes are merged into \texttt{main} only through pull requests approved by the other team member. Each pre-defense submission is marked with a tag (\texttt{pre-defense-1}, \texttt{pre-defense-2}, \texttt{final-pre-defense}).
+\item \emph{Quality}: automated tests run in GitHub Actions on each pull request; secrets, API keys and real personal data are never committed.
+\item \emph{Supervision}: the team meets the supervisor at least every two weeks; remarks and the actions taken are recorded in the supervisor feedback log.
+\item \emph{Definition of done}: a task is complete when the code or document is merged after review, tests pass, and the YouTrack task is closed with a link to the pull request.
+\end{itemize}
+
+\section{Risk Register}
+
+Risks are rated by probability and impact on a scale of low (1), medium (2) and high (3); the score is their product. The register is reviewed at the end of each sprint.
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{xltabular}{\linewidth}{P{0.8cm}P{3.6cm}C{0.6cm}C{0.6cm}C{0.8cm}LP{1.6cm}}
+\caption{Risk register (P --- probability, I --- impact, S --- score)}\label{tab:risks}\\
+\toprule
+\thead \textbf{ID} & \textbf{Risk} & \textbf{P} & \textbf{I} & \textbf{S} & \textbf{Mitigation and contingency} & \textbf{Owner} \\ \midrule
+\endfirsthead
+\multicolumn{7}{l}{\small\textit{Table \ref{tab:risks} (continued)}}\\
+\toprule
+\thead \textbf{ID} & \textbf{Risk} & \textbf{P} & \textbf{I} & \textbf{S} & \textbf{Mitigation and contingency} & \textbf{Owner} \\ \midrule
+\endhead
+R1 & Quality of the NER model on business texts is lower than on KazNERD (domain shift) & 3 & 3 & 9 & Feasibility check in November; fine-tuning on synthetic business texts; gazetteer and user review as additional layers. If targets are not reached, they are revised with the supervisor and the result is reported honestly & Amina \\ \rl
+R2 & Web interfaces of ChatGPT or Gemini change and break interception & 3 & 2 & 6 & Separate adapter per service; end-to-end tests on mock pages; the API proxy as a stable alternative for the demonstration & Nazerke \\ \rl
+R3 & Addresses are detected poorly (no address label in KazNERD) & 2 & 2 & 4 & Combination of NER locations and address patterns; manual marking by the user & Amina \\ \rl
+R4 & Restoration fails for streamed or inflected pseudonyms & 2 & 2 & 4 & Buffering of fragments; tolerant matching of pseudonyms; inflected restoration is a Should requirement & Amina \\ \rl
+R5 & Inconsistent pseudonyms for word forms of Kazakh and Russian names & 2 & 2 & 4 & Normalization by suffix and case rules and fuzzy matching; dedicated test set & Amina \\ \rl
+R6 & Latency exceeds 1 s on a CPU server & 2 & 2 & 4 & Base-size encoder model, model loaded once, rules before NER; option of a smaller or quantized model & Amina \\ \rl
+R7 & Schedule slippage due to examinations and workload of a two-person team & 3 & 2 & 6 & MVP first; MoSCoW priorities; Could requirements are dropped first; buffer in April & Both \\ \rl
+R8 & A team member is temporarily unavailable & 1 & 3 & 3 & Shared repository, documented tasks, code review by both members & Both \\ \rl
+R9 & Synthetic corpus is not representative of real texts & 2 & 2 & 4 & Templates in several genres, hard negatives, manual free-form texts; limitation stated in the thesis & Nazerke \\ \rl
+R10 & Not enough participants for usability testing & 2 & 1 & 2 & Recruitment through survey respondents and university contacts; testing with 8 participants is sufficient & Nazerke \\ \rl
+R11 & The system itself becomes a point of leakage (mapping or logs) & 1 & 3 & 3 & Encryption and short retention of the mapping, no original values in logs, security tests (Experiment 6) & Amina \\ \rl
+R12 & Costs or limits of OpenAI and Gemini APIs & 2 & 1 & 2 & Free tiers and small experiment sets; mock AI service for automated tests & Amina \\ \rl
+R13 & No access to a graphics processor for fine-tuning & 1 & 2 & 2 & Google Colab or Kaggle; base-size model & Amina \\ \rl
+R14 & Scope creep (Claude, health data, files) & 2 & 2 & 4 & Fixed scope in the proposal; new ideas recorded as future work & Both \\
+\bottomrule
+\end{xltabular}
+}
+
+The highest risks are R1 (quality of the NER model), R2 (changes of the web interfaces) and R7 (schedule). They are addressed early: the feasibility check of the NER model is the first task after pre-defense 1, the API proxy is kept as an alternative to the extension, and the plan is built around a minimum viable product.
+
+\end{document}
