@@ -1,0 +1,288 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\usepackage{float}
+\begin{document}
+\maketitlepage{Verification and Evaluation Plan}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This document describes how the PII Anonymization Gateway will be verified and evaluated. Verification checks that the system satisfies the functional and non-functional requirements defined in the document \emph{Requirements Specification}; evaluation measures the quality of personal data detection, pseudonymization and restoration, the performance of the system and its usability, and compares the system with a baseline solution. The plan defines the test data, the metrics, the experiments, the acceptance criteria and the threats to validity.
+
+\section{Evaluation Questions}
+
+The evaluation answers the following questions:
+\begin{enumerate}[label=EQ\arabic*.,leftmargin=3em]
+\item How accurately does the system detect personal data in Kazakh, Russian, English and mixed-language text, and how does it compare with Microsoft Presidio without customization? (FR-1, FR-2)
+\item Which components of the hybrid detection contribute to the result? (ablation study)
+\item Are pseudonyms consistent within a text, and are original values correctly restored in the responses of AI services, including streamed and inflected responses? (FR-3, FR-4)
+\item Does anonymization preserve the usefulness of AI responses? (aim of the project)
+\item Does the added latency remain within the target? (NFR-1)
+\item Do the security properties hold: no original values in logs, limited retention of the mapping, access control and fail-closed behaviour? (NFR-2, NFR-4)
+\item Can users complete the main tasks with the browser extension, and how do they rate its usability? (NFR-5)
+\end{enumerate}
+
+\section{Test Data}
+
+\subsection{Synthetic Annotated Corpus}
+
+Real personal data are not used at any stage. The test corpus is generated synthetically and annotated with the data types listed in the requirements specification. Texts are created from templates of typical documents in which users paste personal data: business letters, contracts and invoices, human resources documents, customer support requests, messages in chats and educational texts. The templates are written manually in each language and filled with fictitious values:
+\begin{itemize}
+\item names from lists of Kazakh, Russian and English first names, surnames and patronymics, inflected by case (Russian) and with suffixes (Kazakh);
+\item IIN and BIN generated with a valid date and check digit; IBAN with a valid Kazakhstan format and checksum; card numbers with published test prefixes and a valid Luhn digit;
+\item phone numbers in Kazakhstan formats, e-mail addresses on reserved domains (\texttt{example.kz}, \texttt{example.com}), addresses composed of real city names and fictitious streets;
+\item hard negatives: dates, contract and order numbers, amounts, capitalized common words and place names that are not part of an address.
+\end{itemize}
+
+Table~\ref{tab:corpus} shows the planned composition of the corpus. Mixed-language texts combine Kazakh, Russian and English within one text or one sentence, which reflects the survey finding that 71\% of respondents use several languages or mix them.
+
+\begin{table}[H]
+\caption{Planned composition of the test corpus}\label{tab:corpus}
+\small
+\begin{tabularx}{\linewidth}{LC{2.6cm}C{3.2cm}}
+\toprule
+\thead \textbf{Subset} & \textbf{Texts} & \textbf{Annotated values (approx.)} \\ \midrule
+Kazakh & 300 & 1,500 \\ \rl
+Russian & 300 & 1,500 \\ \rl
+English & 200 & 1,000 \\ \rl
+Mixed-language (code-switched) & 200 & 1,000 \\ \rl
+Negative examples: invalid IIN/BIN, card and IBAN numbers & 400 values & --- \\ \midrule
+\textbf{Total} & \textbf{1,000 texts} & \textbf{about 5,000} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Annotation and Split}
+
+Generated texts are annotated automatically from the templates, and the annotation of free-form parts is checked manually in Label Studio. A random sample of 20\% of the texts is annotated independently by both team members; agreement is measured by Cohen's kappa~\cite{cohen}, and the target is at least 0.80. The corpus is divided into a development set (30\%), used to tune the NER confidence threshold and the rules, and a held-out test set (70\%), used only for the final results.
+
+\subsection{Additional Data}
+
+The NER model is fine-tuned and validated on the training and validation parts of KazNERD and evaluated on its test part, so that the results can be compared with the published values. The corpus generator, the templates and the annotation guidelines are stored in the repository so that the corpus can be reproduced.
+
+\section{Metrics}
+
+\subsection{Detection Quality}
+
+Detection is evaluated at the entity level, as in the CoNLL-2003 named entity recognition shared task~\cite{conll}. A detection is counted as correct (true positive) if its span matches an annotated value and the type is correct. Two additional views are reported: \emph{partial match}, where the spans overlap and the type is correct (the partial matching mode used in SemEval-2013 Task~9~\cite{semeval}), and \emph{masked}, where the value is hidden regardless of the type, as in the Presidio experiment described in the document \emph{Existing System Comparison}. Precision $P$, recall $R$ and the F-measure $F_\beta$~\cite{rijsbergen} are calculated per data type, per language and in total (micro- and macro-averaged), where $TP$, $FP$ and $FN$ are the numbers of true positives, false positives and false negatives:
+\[
+P=\frac{TP}{TP+FP},\qquad R=\frac{TP}{TP+FN},\qquad F_\beta=\frac{(1+\beta^2)\,P\,R}{\beta^2 P+R}.
+\]
+F1 ($\beta=1$) is reported for comparison with other work. The primary metric is F2 ($\beta=2$), which weights recall twice as much as precision, because a missed value cannot be recalled once it is sent, while a false alarm costs the user one click. Evaluation frameworks for text anonymization likewise treat recall of identifiers as the main privacy measure~\cite{tab}. F2 is used together with the minimum precision defined in the requirements.
+
+In addition, the \emph{leakage rate} is calculated: the share of texts in which at least one personal data value remains in the anonymized text. This metric reflects the risk for the user better than averaged recall.
+
+Confidence intervals (95\%) are estimated by bootstrap resampling of texts (1,000 samples)~\cite{efron}. The difference between the system and the baseline is tested with a paired bootstrap test~\cite{koehn}.
+
+\subsection{Pseudonymization and Restoration}
+
+\begin{itemize}
+\item \emph{Consistency rate}: the share of entities that occur several times in a text, including different word forms, and receive the same pseudonym in all occurrences (FR-3.2).
+\item \emph{Restoration rate}: the share of AI responses in which all pseudonyms are replaced with the original values and no pseudonym remains (FR-4.1, FR-4.2).
+\item \emph{Inflected restoration rate}: the share of pseudonyms changed by the AI model (for example, with an added suffix) that are restored correctly (FR-4.3).
+\end{itemize}
+
+\subsection{Performance}
+
+Latency is measured on the server side from receiving the request to returning the anonymized text, and for restoration separately. The 50th and 95th percentiles are reported for texts of 500, 1,000 and 2,000 characters. Throughput is measured with 10 concurrent clients.
+
+\subsection{Usability}
+
+Usability is measured by task completion rate, number of errors, time per task and the System Usability Scale (SUS) score~\cite{sus}.
+
+\section{Experiments}
+
+\subsection{Experiment 1: Comparison with the Baseline}
+
+The full system is compared with Microsoft Presidio without customization, configured with the English, Russian and multilingual spaCy models, as in the preliminary experiment. In that experiment, Presidio masked 80\% of the values in the Russian sample and 86\% in the English sample, but assigned the correct type to only 51\% and 76\% of the values respectively, and did not recognize any IIN with the correct type. The same experiment is repeated on the held-out test set.
+
+\subsection{Experiment 2: Ablation Study}
+
+To determine the contribution of each component, the following configurations are evaluated on the same test set:
+\begin{enumerate}[label=C\arabic*.,leftmargin=3em]
+\item rule recognizers only;
+\item NER model only;
+\item rules and NER without the Kazakh name gazetteer;
+\item rules without checksum validation (to measure the effect of validation on precision);
+\item the full system.
+\end{enumerate}
+
+\subsection{Experiment 3: Pseudonymization and Restoration with AI Services}
+
+A set of 200 prompts from the test corpus (100 for ChatGPT and 100 for Gemini) is anonymized and sent to the AI services through the API proxy; 50 of them are sent with streaming enabled. Only synthetic data are sent to the providers. Typical tasks are used: writing a letter, summarizing, translating and answering a client. The consistency rate, restoration rate and inflected restoration rate are calculated on the responses.
+
+\subsection{Experiment 4: Usefulness of AI Responses}
+
+For 50 tasks, responses to the original prompt and to the anonymized prompt with restoration are obtained. Two evaluators who do not know which response is which rate each pair on a scale from 1 to 5 for correctness and completeness. The share of pairs in which the restored response is rated not lower than the original response is reported. This experiment checks that anonymization does not make the AI service useless.
+
+\subsection{Experiment 5: Performance}
+
+The anonymization service is deployed with Docker Compose on a server without a graphics processor (the configuration of the server is reported with the results). Load is generated with Locust: 1,000 requests for each text length and a test with 10 concurrent clients.
+
+\subsection{Experiment 6: Security Verification}
+
+\begin{itemize}
+\item All values of the test corpus are searched in the application logs, the database and the log export after processing the corpus; no value may be found (NFR-2, FR-7.1).
+\item The mapping is checked to be encrypted in Redis and deleted after the configured retention period.
+\item Requests without a token, with an expired token and with a token of another role are checked to be rejected; the mapping of one request is checked to be unavailable to another session (FR-3.3, FR-7.4).
+\item The anonymization service is stopped during use of the extension, and the text is checked not to be sent (NFR-4).
+\item The application is scanned with OWASP ZAP (baseline scan), and dependencies are checked for known vulnerabilities.
+\end{itemize}
+
+\subsection{Experiment 7: Usability Testing}
+
+Eight to ten participants from the target groups (employees who handle personal data and students) perform three tasks with the browser extension: sending a request with personal data and checking the response, handling a blocked request, and adding missed data in a mixed-language text. Participants think aloud; observers record errors and time. After the tasks, participants complete the SUS questionnaire and a short interview. Participation is voluntary and anonymous, and only synthetic data are used in the tasks. The first round is conducted with the prototype and the second with the implemented extension.
+
+\section{Software Testing}
+
+Automated tests are run in GitHub Actions on each pull request:
+\begin{itemize}
+\item unit tests (pytest) for recognizers, checksum functions, pseudonymization and restoration, including streamed fragments;
+\item integration tests of the REST API and the proxy with a mock AI service;
+\item tests of the browser extension (Jest) for interception and display of detections;
+\item end-to-end tests of the main scenario in a browser (Playwright) on mock pages of ChatGPT and Gemini.
+\end{itemize}
+The target test coverage of the server is at least 70\% (NFR-7).
+
+\section{Acceptance Criteria}
+
+Table~\ref{tab:accept} summarizes how each requirement is verified.
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{xltabular}{\linewidth}{P{1.6cm}LP{4.6cm}C{1.4cm}}
+\caption{Requirements, verification methods and target values}\label{tab:accept}\\
+\toprule
+\thead \textbf{Req.} & \textbf{Verification} & \textbf{Target} & \textbf{Exp.} \\ \midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\textit{Table \ref{tab:accept} (continued)}}\\
+\toprule
+\thead \textbf{Req.} & \textbf{Verification} & \textbf{Target} & \textbf{Exp.} \\ \midrule
+\endhead
+FR-1.1 & Detection of structured identifiers on the test set & Recall $\geq 0.95$, precision $\geq 0.95$ & 1 \\ \rl
+FR-1.2 & Detection of names, addresses and organizations per language & Recall $\geq 0.85$, precision $\geq 0.80$; F2 higher than Presidio & 1, 2 \\ \rl
+FR-1.3 & Code-switched subset & Recall not lower than 0.05 below the average & 1 \\ \rl
+FR-2 & 400 invalid numbers & No detections & 1, 2 \\ \rl
+FR-3.2 & Texts with repeated entities and word forms & Consistency 100\% & 3 \\ \rl
+FR-4.1, FR-4.2 & Responses of AI services, including streaming & $\geq 95\%$ fully restored & 3 \\ \rl
+FR-4.3 & Inflected pseudonyms & $\geq 90\%$ restored & 3 \\ \rl
+FR-5, FR-6 & End-to-end tests and usability testing & All scenarios pass & 7, tests \\ \rl
+FR-7.1, NFR-2 & Search of corpus values in logs and database; Redis checks & No values found; mapping deleted & 6 \\ \rl
+FR-8 & OpenAI client library through the proxy & Works without changes & 3, tests \\ \rl
+NFR-1 & Latency, 2,000 characters & 95th percentile $\leq 1$ s; restoration $\leq 0.1$ s & 5 \\ \rl
+NFR-4 & Service stopped during use & Text not sent & 6 \\ \rl
+NFR-5 & Usability testing & Completion $\geq 90\%$, SUS $\geq 70$ & 7 \\ \rl
+NFR-7 & Coverage report & $\geq 70\%$ & tests \\
+\bottomrule
+\end{xltabular}
+}
+
+If a target is not reached, the result is reported as measured, the errors are analysed by type and language, and the cause and possible improvements are discussed.
+
+\section{Threats to Validity}
+
+\begin{itemize}
+\item \emph{Synthetic data}: generated texts may be more regular than real texts, which can overestimate the results. To reduce this effect, templates are written in several genres by both team members, hard negatives are included, and part of the free-form text is written manually.
+\item \emph{Annotation bias}: the authors of the system also annotate the corpus. Double annotation of a sample and the agreement measure reduce this risk; the test set is not used during development.
+\item \emph{Baseline configuration}: Presidio is evaluated without customization, which corresponds to its typical use but is not its best possible configuration. This is stated explicitly when the results are compared.
+\item \emph{Changing AI services}: responses of ChatGPT and Gemini change over time; the model versions and dates of the experiments are recorded.
+\item \emph{Small number of participants}: usability testing with 8--10 participants identifies the main problems but does not give statistically generalizable results.
+\end{itemize}
+
+\section{Reporting}
+
+The results are presented in the thesis and in the repository: the corpus generator, the evaluation scripts, the configuration of each experiment and the raw results are stored in the \texttt{tests} directory so that the experiments can be repeated. The schedule of the experiments is given in the document \emph{Project Plan and Risks}.
+
+\begin{thebibliography}{99}
+\bibitem{cohen} J. Cohen, ``A coefficient of agreement for nominal scales,'' \emph{Educational and Psychological Measurement}, vol.~20, no.~1, pp. 37--46, 1960, \doi{10.1177/001316446002000104}.
+\bibitem{conll} E. F. Tjong Kim Sang and F. De Meulder, ``Introduction to the CoNLL-2003 shared task: Language-independent named entity recognition,'' in \emph{Proc. 7th Conf. on Natural Language Learning at HLT-NAACL}, 2003, pp. 142--147. [Online]. Available: \url{https://aclanthology.org/W03-0419}
+\bibitem{semeval} I. Segura-Bedmar, P. Mart\'inez, and M. Herrero-Zazo, ``SemEval-2013 Task 9: Extraction of drug-drug interactions from biomedical texts (DDIExtraction 2013),'' in \emph{Proc. 7th Int. Workshop on Semantic Evaluation (SemEval)}, 2013, pp. 341--350. [Online]. Available: \url{https://aclanthology.org/S13-2056}
+\bibitem{rijsbergen} C. J. van Rijsbergen, \emph{Information Retrieval}, 2nd ed. London, U.K.: Butterworths, 1979.
+\bibitem{tab} I. Pil\'an, P. Lison, L. {\O}vrelid, A. Papadopoulou, D. S\'anchez, and M. Batet, ``The Text Anonymization Benchmark (TAB): A dedicated corpus and evaluation framework for text anonymization,'' \emph{Computational Linguistics}, vol.~48, no.~4, pp. 1053--1101, 2022, \href{https://doi.org/10.1162/coli_a_00458}{doi: 10.1162/coli\_a\_00458}.
+\bibitem{efron} B. Efron and R. J. Tibshirani, \emph{An Introduction to the Bootstrap}. New York, NY, USA: Chapman \& Hall, 1993.
+\bibitem{koehn} P. Koehn, ``Statistical significance tests for machine translation evaluation,'' in \emph{Proc. Conf. on Empirical Methods in Natural Language Processing (EMNLP)}, 2004, pp. 388--395. [Online]. Available: \url{https://aclanthology.org/W04-3250}
+\bibitem{sus} J. Brooke, ``SUS: A `quick and dirty' usability scale,'' in \emph{Usability Evaluation in Industry}, P. W. Jordan, B. Thomas, B. A. Weerdmeester, and I. L. McClelland, Eds. London, U.K.: Taylor \& Francis, 1996, pp. 189--194.
+\end{thebibliography}
+
+\end{document}
