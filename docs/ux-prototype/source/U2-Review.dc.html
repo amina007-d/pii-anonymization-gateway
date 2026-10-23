@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>U2 — проверка найденных данных</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.pii{padding:1px 4px;border-radius:4px;font-weight:500}
+.person{background:#DCE6FB;color:#1E47A8}.iin{background:#FCE3C7;color:#8A3B06}.phone{background:#E8DEFA;color:#5530A6}
+.email{background:#CDEDE9;color:#0B5A55}.addr{background:#F1E6CC;color:#6B4C12}.iddoc{background:#F9DCEB;color:#8E1F5A}
+.iban{background:#E1E5EB;color:#344054}.org{background:#D9EFD6;color:#27612A}
+.item{display:grid;grid-template-columns:24px 128px minmax(0,1fr) 112px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #E3E5E2;font-size:14px}
+.tok{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3D423F}
+.val{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #D9DCD8; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column">
+  <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: #ECEEEB; border-bottom: 1px solid #C9CDC8">
+    <div style="display: flex; gap: 6px" aria-hidden="true"><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span></div>
+    <div style="flex: 1; height: 30px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #3D423F">chatgpt.com</div>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <div style="flex: 1; background: #F0F1EF; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 40px">
+      <div style="border: 1px solid #C9CDC8; border-radius: 14px; padding: 16px 18px; background: #FFFFFF; font-size: 14px; line-height: 1.7; color: #3D423F">Составь официальное письмо от <span class="pii org">ТОО «Альфа Сервис»</span> (БИН <span class="pii iin">180840012344</span>) клиенту <span class="pii person">Иванову Сергею Петровичу</span> (ИИН <span class="pii iin">850315300009</span>, уд. личности № <span class="pii iddoc">045612378</span>)…</div>
+    </div>
+    <div style="width: 640px; background: #FFFFFF; border-left: 1px solid #C9CDC8; display: flex; flex-direction: column; padding: 22px 24px; gap: 14px; box-sizing: border-box">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h1 style="margin: 0; font-size: 20px">Проверьте данные перед отправкой</h1>
+        <span style="font-size: 13px; color: #5B615D">10 найдено · 10 будет скрыто</span>
+      </div>
+      <div style="font-size: 14px; color: #3D423F">Отмеченные значения будут заменены псевдонимами. Одна и та же сущность во всём тексте получает один псевдоним.</div>
+      <div style="display: flex; flex-direction: column">
+        <div class="item" style="font-size: 12px; color: #5B615D; text-transform: uppercase; letter-spacing: 0.04em"><span></span><span>Тип</span><span>Значение</span><span>Псевдоним</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть ТОО «Альфа Сервис»"><span class="pii org">Организация</span><span class="val">ТОО «Альфа Сервис»</span><span class="tok">&lt;ORG_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть БИН"><span class="pii iin">БИН ✓</span><span class="val">180840012344</span><span class="tok">&lt;BIN_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть ФИО клиента"><span class="pii person">ФИО</span><span class="val">Иванову Сергею Петровичу</span><span class="tok">&lt;PERSON_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть ИИН"><span class="pii iin">ИИН ✓</span><span class="val">850315300009</span><span class="tok">&lt;IIN_1&gt;</span></div>
+        <div class="item" style="background: #FDF1F6; margin: 0 -8px; padding-left: 8px; padding-right: 8px"><input type="checkbox" checked aria-label="Скрыть номер документа"><span class="pii iddoc">Номер док.</span><span class="val">045612378</span><span class="tok">&lt;ID_DOC_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть IBAN"><span class="pii iban">IBAN ✓</span><span class="val">KZ75125KZT1001300335</span><span class="tok">&lt;IBAN_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть адрес"><span class="pii addr">Адрес</span><span class="val">г. Алматы, ул. Сатпаева, д. 5, кв. 10</span><span class="tok">&lt;ADDRESS_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть ФИО менеджера"><span class="pii person">ФИО</span><span class="val">Мария Ким</span><span class="tok">&lt;PERSON_2&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть телефон"><span class="pii phone">Телефон</span><span class="val">+7 (705) 111-22-33</span><span class="tok">&lt;PHONE_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть e-mail"><span class="pii email">E-mail</span><span class="val">m.kim@example.kz</span><span class="tok">&lt;EMAIL_1&gt;</span></div>
+      </div>
+      <div style="border: 1px solid #E7B6CE; background: #FDF1F6; border-radius: 8px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; font-size: 14px">
+        <input id="confirm-doc" type="checkbox" style="margin-top: 3px">
+        <label for="confirm-doc">Политика организации для «Номер документа» — <b>предупредить</b>. Подтверждаю, что номер будет отправлен только в виде псевдонима.</label>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center">
+        <button type="button" style="padding: 9px 12px; border: 1px solid #C9CDC8; border-radius: 8px; background: #FFFFFF; font: inherit; font-size: 14px">+ Отметить пропущенное</button>
+        <button type="button" style="padding: 9px 12px; border: 1px solid #C9CDC8; border-radius: 8px; background: #FFFFFF; font: inherit; font-size: 14px">Изменить тип</button>
+        <div style="flex: 1"></div>
+        <a href="U1-Compose.dc.html" style="padding: 11px 14px; border-radius: 8px; color: #16181A; text-decoration: none; font-size: 14px">Назад</a>
+        <a href="U3-Preview.dc.html" style="padding: 11px 16px; border-radius: 8px; background: #0F6E68; color: #FFFFFF; text-decoration: none; font-size: 14px; font-weight: 600">Далее: что получит ИИ</a>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

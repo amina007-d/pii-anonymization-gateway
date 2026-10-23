@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>P1 — примеры API</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.ep{display:flex;flex-direction:column;gap:10px}
+.hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.m{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;padding:3px 8px;border-radius:6px;background:#0F6E68;color:#FFFFFF}
+.p{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.lab{font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:#5B615D;font-weight:600;margin-bottom:6px}
+pre{margin:0;background:#16181A;color:#E9ECE8;border-radius:10px;padding:14px 16px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1500px; box-sizing: border-box; padding: 48px 56px; background: #F6F7F5; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column; gap: 30px">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <h1 style="margin: 0; font-size: 32px">API прокси: программный доступ</h1>
+    <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #3D423F; max-width: 980px">Для внутренних систем организации (CRM, чат-боты), которые обращаются к LLM напрямую. Все запросы — HTTPS + JSON с токеном JWT или ключом сервисного аккаунта. Документация генерируется автоматически (OpenAPI / Swagger). Все данные в примерах вымышленные.</p>
+  </div>
+
+  <section class="ep">
+    <div class="hd"><span class="m">POST</span><span class="p">/v1/anonymize</span><span style="font-size: 14px; color: #3D423F">— найти и заменить персональные данные (FR-1, FR-2, FR-3)</span></div>
+    <div class="cols">
+      <div><div class="lab">Запрос</div><pre>{
+  "text": "Клиенту Иванову Сергею Петровичу (ИИН 850315300009) позвонить по +7 (705) 111-22-33",
+  "language": "auto",
+  "policy": "default"
+}</pre></div>
+      <div><div class="lab">Ответ 200</div><pre>{
+  "request_id": "req_7f3a91",
+  "anonymized_text": "Клиенту &lt;PERSON_1&gt; (ИИН &lt;IIN_1&gt;) позвонить по &lt;PHONE_1&gt;",
+  "entities": [
+    { "type": "PERSON", "token": "&lt;PERSON_1&gt;", "start": 8, "end": 32, "score": 0.97 },
+    { "type": "IIN", "token": "&lt;IIN_1&gt;", "start": 38, "end": 50, "checksum_valid": true },
+    { "type": "PHONE", "token": "&lt;PHONE_1&gt;", "start": 63, "end": 81 }
+  ],
+  "languages": ["ru"],
+  "expires_in": 900,
+  "processing_ms": 142
+}</pre></div>
+    </div>
+    <div style="font-size: 14px; color: #3D423F">Исходные значения в ответе не возвращаются: словарь замен хранится на сервере, зашифрован и удаляется через <span style="font-family: 'IBM Plex Mono', monospace">expires_in</span> секунд.</div>
+  </section>
+
+  <section class="ep">
+    <div class="hd"><span class="m">POST</span><span class="p">/v1/chat/completions</span><span style="font-size: 14px; color: #3D423F">— прокси, совместимый с форматом OpenAI: обезличить → отправить → восстановить (FR-4, FR-8)</span></div>
+    <div class="cols">
+      <div><div class="lab">Запрос</div><pre>Authorization: Bearer &lt;JWT&gt;
+
+{
+  "provider": "openai",
+  "model": "gpt-4o",
+  "stream": true,
+  "messages": [
+    { "role": "user",
+      "content": "Составь письмо Иванову Сергею Петровичу, ИИН 850315300009" }
+  ]
+}</pre></div>
+      <div><div class="lab">Потоковый ответ (SSE), значения уже восстановлены</div><pre>data: {"id": "req_8c21d0", "choices": [ {"delta": {"content": "Уважаемый "} } ]}
+
+data: {"id": "req_8c21d0", "choices": [ {"delta": {"content": "Иванов Сергей Петрович"} } ]}
+
+data: {"id": "req_8c21d0", "choices": [ {"delta": {"content": "! Ваш ИИН 850315300009 ..."} } ]}
+
+data: {"id": "req_8c21d0", "pii": {"replaced": 2, "restored": 2} }
+
+data: [DONE]</pre></div>
+    </div>
+    <div style="font-size: 14px; color: #3D423F">Псевдоним, разорванный между фрагментами потока, буферизуется до полного получения и только потом восстанавливается.</div>
+  </section>
+
+  <section class="ep">
+    <div class="hd"><span class="m">POST</span><span class="p">/v1/restore</span><span style="font-size: 14px; color: #3D423F">— восстановить значения в тексте, полученном от LLM другим путём</span></div>
+    <div class="cols">
+      <div><div class="lab">Запрос</div><pre>{
+  "request_id": "req_7f3a91",
+  "text": "Уважаемый &lt;PERSON_1&gt;, перезвоните по номеру &lt;PHONE_1&gt;."
+}</pre></div>
+      <div><div class="lab">Ответ 200</div><pre>{
+  "text": "Уважаемый Иванов Сергей Петрович, перезвоните по номеру +7 (705) 111-22-33.",
+  "restored": 2,
+  "unknown_tokens": []
+}</pre></div>
+    </div>
+  </section>
+
+  <section class="ep">
+    <div class="hd"><span class="m" style="background: #A0261A">403</span><span class="p">Блокировка политикой</span><span style="font-size: 14px; color: #3D423F">— текст с номером карты при политике «Блокировать» (FR-6)</span></div>
+    <pre style="max-width: 620px">{
+  "error": "blocked_by_policy",
+  "entity_types": ["CARD"],
+  "message": "Text contains data types blocked by organization policy"
+}</pre>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

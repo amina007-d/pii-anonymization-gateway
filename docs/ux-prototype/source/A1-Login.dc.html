@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>A1 — вход в панель администратора</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.f{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.in{padding:11px 12px;border:1px solid #C9CDC8;border-radius:8px;font:inherit;font-size:15px}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 800px; box-sizing: border-box; background: #F6F7F5; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; align-items: center; justify-content: center; padding: 24px">
+  <div style="width: 100%; max-width: 420px; background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 14px; padding: 32px 28px; display: flex; flex-direction: column; gap: 18px; box-sizing: border-box">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 18px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0F6E68" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway · Администрирование
+    </div>
+    <h1 style="margin: 0; font-size: 24px">Вход для службы ИБ</h1>
+    <div class="f"><label for="em">Рабочая почта</label><input id="em" class="in" type="email" value="a.nurlanov@example.kz"></div>
+    <div class="f"><label for="pw">Пароль</label><input id="pw" class="in" type="password" value="password"></div>
+    <a href="A2-Dashboard.dc.html" style="padding: 13px; border-radius: 8px; background: #0F6E68; color: #FFFFFF; text-decoration: none; font-weight: 600; text-align: center">Войти</a>
+    <div style="font-size: 13px; line-height: 1.5; color: #5B615D">Доступ есть только у ролей «Администратор» и «Аудитор». Сессия защищена токеном JWT и завершается через 30 минут бездействия.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

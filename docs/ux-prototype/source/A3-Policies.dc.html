@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>A3 — политики обработки</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.nav{display:block;padding:10px 12px;border-radius:8px;color:#16181A;text-decoration:none;font-size:15px}
+.nav-on{background:#DDEFEC;color:#0A4F4B;font-weight:600}
+.c{padding:11px 12px;border-bottom:1px solid #E3E5E2;font-size:14px;text-align:left;vertical-align:middle}
+.sel{padding:7px 8px;border-radius:6px;border:1px solid #C9CDC8;font:inherit;font-size:14px;background:#FFFFFF}
+.pii{padding:2px 6px;border-radius:4px;font-weight:500}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 980px; box-sizing: border-box; background: #F6F7F5; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-wrap: wrap">
+  <nav style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; padding: 22px 14px; background: #FFFFFF; border-right: 1px solid #E3E5E2; display: flex; flex-direction: column; gap: 4px">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; padding: 0 12px 16px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6E68" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway
+    </div>
+    <a class="nav" href="A2-Dashboard.dc.html">Обзор</a>
+    <a class="nav nav-on" href="A3-Policies.dc.html">Политики</a>
+    <a class="nav" href="A4-Logs.dc.html">Журнал срабатываний</a>
+    <a class="nav" href="A5-Users.dc.html">Пользователи и роли</a>
+    <a class="nav" href="A6-Settings.dc.html">Безопасность и модели</a>
+    <div style="margin-top: auto; padding: 12px; font-size: 13px; color: #5B615D">a.nurlanov@example.kz<br>Администратор</div>
+  </nav>
+  <main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+      <div>
+        <h1 style="margin: 0 0 6px; font-size: 26px">Политики обработки</h1>
+        <div style="font-size: 14px; color: #3D423F">Действие для каждого типа данных применяется в расширении и в API-прокси.</div>
+      </div>
+      <button type="button" style="padding: 11px 16px; border-radius: 8px; border: 0; background: #0F6E68; color: #FFFFFF; font: inherit; font-weight: 600">Сохранить изменения</button>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: #3D423F">
+      <span><b>Заменить</b> — заменить псевдонимом и восстановить в ответе</span>
+      <span><b>Предупредить</b> — заменить, но запросить подтверждение пользователя</span>
+      <span><b>Блокировать</b> — запретить отправку текста с этими данными</span>
+    </div>
+    <div style="overflow-x: auto; background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 12px">
+      <table style="width: 100%; min-width: 820px; border-collapse: collapse">
+        <thead><tr style="background: #EEF0ED"><th class="c">Тип данных</th><th class="c">Как обнаруживается</th><th class="c">Проверка</th><th class="c">Действие</th><th class="c">Включено</th></tr></thead>
+        <tbody>
+          <tr><td class="c"><span class="pii" style="background: #DCE6FB; color: #1E47A8">ФИО</span></td><td class="c">NER-модель (KZ, RU, EN) + словарь казахских имён</td><td class="c">—</td><td class="c"><select class="sel" aria-label="Действие для ФИО"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="ФИО включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #FCE3C7; color: #8A3B06">ИИН</span></td><td class="c">Шаблон 12 цифр</td><td class="c">Контрольный разряд, дата рождения</td><td class="c"><select class="sel" aria-label="Действие для ИИН"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="ИИН включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #FCE3C7; color: #8A3B06">БИН</span></td><td class="c">Шаблон 12 цифр + контекст «БИН»</td><td class="c">Контрольный разряд</td><td class="c"><select class="sel" aria-label="Действие для БИН"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="БИН включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #E8DEFA; color: #5530A6">Телефон</span></td><td class="c">Шаблоны +7 / 8, коды операторов KZ</td><td class="c">Длина и код</td><td class="c"><select class="sel" aria-label="Действие для телефона"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="Телефон включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #CDEDE9; color: #0B5A55">E-mail</span></td><td class="c">Шаблон</td><td class="c">Формат домена</td><td class="c"><select class="sel" aria-label="Действие для e-mail"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="E-mail включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #F1E6CC; color: #6B4C12">Адрес</span></td><td class="c">NER + шаблоны (ул., даңғылы, д., кв.)</td><td class="c">—</td><td class="c"><select class="sel" aria-label="Действие для адреса"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="Адрес включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #F9DCEB; color: #8E1F5A">Номер документа</span></td><td class="c">Шаблон 9 цифр + контекст (уд. личности, паспорт)</td><td class="c">Контекст</td><td class="c"><select class="sel" aria-label="Действие для номера документа"><option>Заменить</option><option selected>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="Номер документа включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #E1E5EB; color: #344054">IBAN</span></td><td class="c">Шаблон KZ + 18 знаков</td><td class="c">Контрольная сумма IBAN</td><td class="c"><select class="sel" aria-label="Действие для IBAN"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="IBAN включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #FBD9D5; color: #A0261A">Номер карты</span></td><td class="c">Шаблон 16 цифр</td><td class="c">Алгоритм Луна</td><td class="c"><select class="sel" aria-label="Действие для номера карты"><option>Заменить</option><option>Предупредить</option><option selected>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="Номер карты включено"></td></tr>
+          <tr><td class="c"><span class="pii" style="background: #D9EFD6; color: #27612A">Организация</span></td><td class="c">NER + шаблоны ТОО / АО / ИП</td><td class="c">—</td><td class="c"><select class="sel" aria-label="Действие для организации"><option selected>Заменить</option><option>Предупредить</option><option>Блокировать</option></select></td><td class="c"><input type="checkbox" checked aria-label="Организация включено"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
+      <div style="background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+        <h2 style="margin: 0; font-size: 16px">Где применяется</h2>
+        <label style="display: flex; gap: 8px; font-size: 14px"><input type="checkbox" checked>Расширение: ChatGPT</label>
+        <label style="display: flex; gap: 8px; font-size: 14px"><input type="checkbox" checked>Расширение: Gemini</label>
+        <label style="display: flex; gap: 8px; font-size: 14px"><input type="checkbox" checked>API-прокси</label>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+        <h2 style="margin: 0; font-size: 16px">Режим подтверждения</h2>
+        <label style="display: flex; gap: 8px; font-size: 14px"><input type="radio" name="cm" checked>Пользователь может выбрать сам</label>
+        <label style="display: flex; gap: 8px; font-size: 14px"><input type="radio" name="cm">Всегда показывать найденное</label>
+        <label style="display: flex; gap: 8px; font-size: 14px"><input type="radio" name="cm">Только автоматическая замена</label>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

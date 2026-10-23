@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>U3 — что получит ИИ-сервис</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.tk{font-family:'IBM Plex Mono',monospace;font-size:14px;padding:1px 5px;border-radius:4px;border:1px dashed currentColor}
+.person{background:#DCE6FB;color:#1E47A8}.iin{background:#FCE3C7;color:#8A3B06}.phone{background:#E8DEFA;color:#5530A6}
+.email{background:#CDEDE9;color:#0B5A55}.addr{background:#F1E6CC;color:#6B4C12}.iddoc{background:#F9DCEB;color:#8E1F5A}
+.iban{background:#E1E5EB;color:#344054}.org{background:#D9EFD6;color:#27612A}
+.meta{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #E3E5E2;font-size:14px}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #D9DCD8; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column">
+  <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: #ECEEEB; border-bottom: 1px solid #C9CDC8">
+    <div style="display: flex; gap: 6px" aria-hidden="true"><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span></div>
+    <div style="flex: 1; height: 30px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #3D423F">chatgpt.com</div>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <div style="flex: 1; background: #F0F1EF"></div>
+    <div style="width: 760px; background: #FFFFFF; border-left: 1px solid #C9CDC8; display: flex; flex-direction: column; padding: 24px 28px; gap: 16px; box-sizing: border-box">
+      <h1 style="margin: 0; font-size: 20px">Так ИИ-сервис увидит ваш запрос</h1>
+      <div style="border: 1px solid #E3E5E2; border-radius: 10px; padding: 18px 20px; background: #FAFBFA; font-size: 16px; line-height: 1.9">Составь официальное письмо от <span class="tk org">&lt;ORG_1&gt;</span> (БИН <span class="tk iin">&lt;BIN_1&gt;</span>) клиенту <span class="tk person">&lt;PERSON_1&gt;</span> (ИИН <span class="tk iin">&lt;IIN_1&gt;</span>, уд. личности № <span class="tk iddoc">&lt;ID_DOC_1&gt;</span>). Напомни, что оплату по договору нужно перевести на счёт <span class="tk iban">&lt;IBAN_1&gt;</span>. Документы доставим по адресу: <span class="tk addr">&lt;ADDRESS_1&gt;</span>. По вопросам — менеджер <span class="tk person">&lt;PERSON_2&gt;</span>, <span class="tk phone">&lt;PHONE_1&gt;</span>, <span class="tk email">&lt;EMAIL_1&gt;</span>.</div>
+      <div style="display: flex; flex-direction: column">
+        <div class="meta"><span>Скрыто значений</span><b>10 из 10</b></div>
+        <div class="meta"><span>Время обработки</span><b>0,18 с</b></div>
+        <div class="meta"><span>Где хранятся исходные значения</span><b>Сервер организации, зашифрованы</b></div>
+        <div class="meta"><span>Словарь замен удаляется</span><b>через 15 минут</b></div>
+        <div class="meta"><span>Получатель</span><b>ChatGPT</b></div>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; margin-top: auto">
+        <a href="U2-Review.dc.html" style="padding: 11px 14px; border-radius: 8px; color: #16181A; text-decoration: none; font-size: 14px">Назад к проверке</a>
+        <div style="flex: 1"></div>
+        <a href="U4-Response.dc.html" style="padding: 12px 18px; border-radius: 8px; background: #0F6E68; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600">Отправить обезличенный текст</a>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

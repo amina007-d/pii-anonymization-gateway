@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>A4 — журнал срабатываний</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.nav{display:block;padding:10px 12px;border-radius:8px;color:#16181A;text-decoration:none;font-size:15px}
+.nav-on{background:#DDEFEC;color:#0A4F4B;font-weight:600}
+.c{padding:10px 12px;border-bottom:1px solid #E3E5E2;font-size:14px;text-align:left;white-space:nowrap}
+.sel{padding:8px;border-radius:8px;border:1px solid #C9CDC8;font:inherit;font-size:14px;background:#FFFFFF}
+.ok{color:#27612A;font-weight:600}.warn{color:#8E1F5A;font-weight:600}.blk{color:#A0261A;font-weight:600}.err{color:#6B4500;font-weight:600}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 900px; box-sizing: border-box; background: #F6F7F5; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-wrap: wrap">
+  <nav style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; padding: 22px 14px; background: #FFFFFF; border-right: 1px solid #E3E5E2; display: flex; flex-direction: column; gap: 4px">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; padding: 0 12px 16px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6E68" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway
+    </div>
+    <a class="nav" href="A2-Dashboard.dc.html">Обзор</a>
+    <a class="nav" href="A3-Policies.dc.html">Политики</a>
+    <a class="nav nav-on" href="A4-Logs.dc.html">Журнал срабатываний</a>
+    <a class="nav" href="A5-Users.dc.html">Пользователи и роли</a>
+    <a class="nav" href="A6-Settings.dc.html">Безопасность и модели</a>
+    <div style="margin-top: auto; padding: 12px; font-size: 13px; color: #5B615D">a.nurlanov@example.kz<br>Администратор</div>
+  </nav>
+  <main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+      <h1 style="margin: 0; font-size: 26px">Журнал срабатываний</h1>
+      <button type="button" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #C9CDC8; background: #FFFFFF; font: inherit">Выгрузить CSV</button>
+    </div>
+    <div style="background: #DDEFEC; border-radius: 10px; padding: 12px 14px; font-size: 14px; color: #0A4F4B">Исходные значения в журнал не записываются: только тип данных, количество, действие и время. Записи хранятся 90 дней.</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+      <select class="sel" aria-label="Период"><option>Последние 24 часа</option><option>7 дней</option><option>30 дней</option></select>
+      <select class="sel" aria-label="Тип данных"><option>Все типы</option><option>ФИО</option><option>ИИН / БИН</option><option>Номер карты</option></select>
+      <select class="sel" aria-label="Действие"><option>Все действия</option><option>Заменено</option><option>Подтверждено</option><option>Заблокировано</option><option>Сбой сервера</option></select>
+      <select class="sel" aria-label="Сервис"><option>Все сервисы</option><option>ChatGPT</option><option>Gemini</option><option>API-прокси</option></select>
+      <input class="sel" type="search" placeholder="Пользователь" aria-label="Поиск по пользователю">
+    </div>
+    <div style="overflow-x: auto; background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 12px">
+      <table style="width: 100%; min-width: 900px; border-collapse: collapse">
+        <thead><tr style="background: #EEF0ED"><th class="c">Время</th><th class="c">Пользователь</th><th class="c">Сервис</th><th class="c">Язык</th><th class="c">Найдено</th><th class="c">Действие</th><th class="c">Задержка</th></tr></thead>
+        <tbody>
+          <tr><td class="c">19.10 14:32:08</td><td class="c">m.kim@example.kz</td><td class="c">ChatGPT</td><td class="c">RU</td><td class="c">ФИО ×2, ИИН, БИН, номер док., IBAN, адрес, телефон, e-mail, орг.</td><td class="c"><span class="warn">Подтверждено</span></td><td class="c">0,18 с</td></tr>
+          <tr><td class="c">19.10 14:21:47</td><td class="c">o.petrova@example.kz</td><td class="c">ChatGPT</td><td class="c">RU</td><td class="c">Номер карты, ФИО, телефон</td><td class="c"><span class="blk">Заблокировано</span></td><td class="c">0,12 с</td></tr>
+          <tr><td class="c">19.10 13:58:03</td><td class="c">d.omarova@example.kz</td><td class="c">Gemini</td><td class="c">KZ</td><td class="c">ФИО, ИИН, телефон, e-mail, адрес</td><td class="c"><span class="ok">Заменено</span></td><td class="c">0,21 с</td></tr>
+          <tr><td class="c">19.10 13:40:19</td><td class="c">a.muratkyzy@example.kz</td><td class="c">ChatGPT</td><td class="c">KZ / RU / EN</td><td class="c">ФИО ×3 (1 вручную), e-mail, телефон, ИИН</td><td class="c"><span class="ok">Заменено</span></td><td class="c">0,26 с</td></tr>
+          <tr><td class="c">19.10 13:12:55</td><td class="c">crm-service (API)</td><td class="c">API-прокси</td><td class="c">RU</td><td class="c">ФИО, телефон</td><td class="c"><span class="ok">Заменено</span></td><td class="c">0,09 с</td></tr>
+          <tr><td class="c">19.10 12:47:31</td><td class="c">n.sadykov@example.kz</td><td class="c">ChatGPT</td><td class="c">—</td><td class="c">не проверено</td><td class="c"><span class="err">Сбой сервера · отправка остановлена</span></td><td class="c">—</td></tr>
+          <tr><td class="c">19.10 12:05:14</td><td class="c">m.kim@example.kz</td><td class="c">ChatGPT</td><td class="c">EN</td><td class="c">ФИО, e-mail</td><td class="c"><span class="ok">Заменено</span></td><td class="c">0,11 с</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size: 13px; color: #5B615D">Демо-данные прототипа · все имена и адреса вымышленные</div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

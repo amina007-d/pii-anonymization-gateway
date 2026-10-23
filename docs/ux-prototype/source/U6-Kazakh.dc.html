@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<title>U6 — қазақ тіліндегі мәтін</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.pii{padding:1px 4px;border-radius:4px;font-weight:500}
+.person{background:#DCE6FB;color:#1E47A8}.iin{background:#FCE3C7;color:#8A3B06}.phone{background:#E8DEFA;color:#5530A6}
+.email{background:#CDEDE9;color:#0B5A55}.addr{background:#F1E6CC;color:#6B4C12}
+.item{display:grid;grid-template-columns:24px 112px minmax(0,1fr) 108px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #E3E5E2;font-size:14px}
+.tok{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3D423F}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #D9DCD8; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column">
+  <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: #ECEEEB; border-bottom: 1px solid #C9CDC8">
+    <div style="display: flex; gap: 6px" aria-hidden="true"><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span></div>
+    <div style="flex: 1; height: 30px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #3D423F">gemini.google.com</div>
+    <div style="height: 30px; padding: 0 10px; border-radius: 6px; background: #0F6E68; color: #FFFFFF; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway · 5
+    </div>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <div style="flex: 1; background: #FFFFFF; display: flex; flex-direction: column; padding: 28px 48px; gap: 16px">
+      <div style="font-size: 14px; color: #5B615D">ИИ-сервис Gemini (бет макеті)</div>
+      <div style="flex: 1"></div>
+      <div style="border: 2px solid #0F6E68; border-radius: 14px; padding: 18px 20px; font-size: 16px; line-height: 1.75">Мына хатты ағылшын тіліне аударып бер: «Құрметті <span class="pii person">Айгерім Нұрланқызы</span>! ЖСН <span class="pii iin">950101400002</span> бойынша өтінішіңіз қабылданды. Сұрақтарыңыз болса, <span class="pii phone">+7 701 234 56 78</span> нөміріне хабарласыңыз немесе <span class="pii email">dana.omarova@example.kz</span> поштасына жазыңыз. Мекенжайымыз: <span class="pii addr">Астана қ., Абай даңғылы, 12</span>.»</div>
+    </div>
+    <div style="width: 560px; background: #F6F7F5; border-left: 1px solid #C9CDC8; display: flex; flex-direction: column; padding: 22px; gap: 14px; box-sizing: border-box">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h1 style="margin: 0; font-size: 19px">Жіберер алдында тексеріңіз</h1>
+        <span style="padding: 4px 8px; border-radius: 6px; background: #FFFFFF; border: 1px solid #C9CDC8; font-size: 12px">Интерфейс тілі: қазақша</span>
+      </div>
+      <div style="font-size: 14px; color: #3D423F">5 жеке дерек табылды · 0,21 с · мәтін тілі: қазақша</div>
+      <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 10px; padding: 4px 14px">
+        <div class="item"><input type="checkbox" checked aria-label="Аты-жөнін жасыру"><span class="pii person">Аты-жөні</span><span>Айгерім Нұрланқызы</span><span class="tok">&lt;PERSON_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="ЖСН жасыру"><span class="pii iin">ЖСН ✓</span><span>950101400002</span><span class="tok">&lt;IIN_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Телефонды жасыру"><span class="pii phone">Телефон</span><span>+7 701 234 56 78</span><span class="tok">&lt;PHONE_1&gt;</span></div>
+        <div class="item"><input type="checkbox" checked aria-label="E-mail жасыру"><span class="pii email">E-mail</span><span>dana.omarova@example.kz</span><span class="tok">&lt;EMAIL_1&gt;</span></div>
+        <div class="item" style="border-bottom: 0"><input type="checkbox" checked aria-label="Мекенжайды жасыру"><span class="pii addr">Мекенжай</span><span>Астана қ., Абай даңғылы, 12</span><span class="tok">&lt;ADDRESS_1&gt;</span></div>
+      </div>
+      <div style="font-size: 13px; font-weight: 600; color: #5B615D">ИИ көретін мәтін</div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 10px; padding: 12px 14px; font-size: 14px; line-height: 1.65">…Құрметті <span class="tok">&lt;PERSON_1&gt;</span>! ЖСН <span class="tok">&lt;IIN_1&gt;</span> бойынша өтінішіңіз қабылданды. Сұрақтарыңыз болса, <span class="tok">&lt;PHONE_1&gt;</span> нөміріне хабарласыңыз немесе <span class="tok">&lt;EMAIL_1&gt;</span> поштасына жазыңыз. Мекенжайымыз: <span class="tok">&lt;ADDRESS_1&gt;</span>.»</div>
+      <div style="display: flex; gap: 10px; margin-top: auto">
+        <button type="button" style="padding: 11px 14px; border-radius: 8px; border: 1px solid #C9CDC8; background: #FFFFFF; font: inherit">Артқа</button>
+        <div style="flex: 1"></div>
+        <button type="button" style="padding: 11px 16px; border-radius: 8px; border: 0; background: #0F6E68; color: #FFFFFF; font: inherit; font-weight: 600">Жасырылған мәтінді жіберу</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>X1 — окно расширения</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.sec{display:flex;flex-direction:column;gap:8px;padding:14px 0;border-bottom:1px solid #E3E5E2}
+.lbl{font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:#5B615D;font-weight:600}
+.opt{display:flex;align-items:center;gap:8px;font-size:14px}
+</style>
+</helmet>
+<div style="width: 400px; height: 640px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #C9CDC8; border-radius: 12px; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; padding: 18px 20px; display: flex; flex-direction: column">
+  <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid #E3E5E2">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6E68" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #27612A"><span style="width: 8px; height: 8px; border-radius: 4px; background: #2F8A3A" aria-hidden="true"></span>Защита включена</div>
+  </div>
+  <div class="sec">
+    <div class="lbl">Подключение</div>
+    <div style="font-size: 14px">Сервер: <span style="font-family: 'IBM Plex Mono', monospace">pii-gateway.local</span></div>
+    <div style="font-size: 14px; color: #3D423F">m.kim@example.kz · роль: Пользователь</div>
+  </div>
+  <div class="sec">
+    <div class="lbl">Режим работы</div>
+    <div class="opt"><input id="m1" type="radio" name="mode" checked><label for="m1">Показывать найденное перед отправкой</label></div>
+    <div class="opt"><input id="m2" type="radio" name="mode"><label for="m2">Заменять автоматически, без подтверждения</label></div>
+  </div>
+  <div class="sec">
+    <div class="lbl">Защищённые сервисы</div>
+    <div class="opt"><input id="s1" type="checkbox" checked disabled><label for="s1">ChatGPT</label></div>
+    <div class="opt"><input id="s2" type="checkbox" checked disabled><label for="s2">Gemini</label></div>
+    <div style="font-size: 12px; color: #5B615D">Список задаёт администратор</div>
+  </div>
+  <div class="sec">
+    <label class="lbl" for="lng">Язык интерфейса</label>
+    <select id="lng" style="padding: 8px; border-radius: 8px; border: 1px solid #C9CDC8; font: inherit; font-size: 14px"><option>Русский</option><option>Қазақша</option><option>English</option></select>
+  </div>
+  <div class="sec" style="border-bottom: 0">
+    <div class="lbl">Сегодня</div>
+    <div style="display: flex; gap: 24px">
+      <div><div style="font-size: 22px; font-weight: 700">12</div><div style="font-size: 13px; color: #5B615D">запросов проверено</div></div>
+      <div><div style="font-size: 22px; font-weight: 700">37</div><div style="font-size: 13px; color: #5B615D">значений скрыто</div></div>
+    </div>
+  </div>
+  <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: 14px">
+    <a href="X2-Login.dc.html">Выйти</a>
+    <span style="font-size: 12px; color: #5B615D">Демо-данные</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":400,"height":640}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

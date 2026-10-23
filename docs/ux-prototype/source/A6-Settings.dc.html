@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>A6 — безопасность и модели</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.nav{display:block;padding:10px 12px;border-radius:8px;color:#16181A;text-decoration:none;font-size:15px}
+.nav-on{background:#DDEFEC;color:#0A4F4B;font-weight:600}
+.card{background:#FFFFFF;border:1px solid #E3E5E2;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:4px}
+.r{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #E3E5E2;font-size:14px}
+.sel{padding:7px 8px;border-radius:6px;border:1px solid #C9CDC8;font:inherit;font-size:14px;background:#FFFFFF}
+.st{font-size:13px;font-weight:600;padding:3px 8px;border-radius:6px;background:#D9EFD6;color:#27612A}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:13px}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 980px; box-sizing: border-box; background: #F6F7F5; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-wrap: wrap">
+  <nav style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; padding: 22px 14px; background: #FFFFFF; border-right: 1px solid #E3E5E2; display: flex; flex-direction: column; gap: 4px">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; padding: 0 12px 16px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6E68" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway
+    </div>
+    <a class="nav" href="A2-Dashboard.dc.html">Обзор</a>
+    <a class="nav" href="A3-Policies.dc.html">Политики</a>
+    <a class="nav" href="A4-Logs.dc.html">Журнал срабатываний</a>
+    <a class="nav" href="A5-Users.dc.html">Пользователи и роли</a>
+    <a class="nav nav-on" href="A6-Settings.dc.html">Безопасность и модели</a>
+    <div style="margin-top: auto; padding: 12px; font-size: 13px; color: #5B615D">a.nurlanov@example.kz<br>Администратор</div>
+  </nav>
+  <main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+    <h1 style="margin: 0; font-size: 26px">Безопасность и модели</h1>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px">
+      <section class="card">
+        <h2 style="margin: 0 0 6px; font-size: 17px">Словарь замен</h2>
+        <div class="r"><label for="ttl">Срок хранения после ответа</label><select id="ttl" class="sel"><option>5 минут</option><option>10 минут</option><option selected>15 минут (максимум)</option></select></div>
+        <div class="r"><span>Хранилище</span><span class="mono">Redis · только в памяти, без записи на диск</span></div>
+        <div class="r"><span>Шифрование значений</span><span>AES-256-GCM <span class="st">включено</span></span></div>
+        <div class="r"><span>Ротация ключа</span><span>каждые 30 дней · следующая 12.11</span></div>
+        <div class="r" style="border-bottom: 0"><span>Исходные значения в журнале</span><span>никогда не записываются</span></div>
+      </section>
+      <section class="card">
+        <h2 style="margin: 0 0 6px; font-size: 17px">Поведение при сбое</h2>
+        <div class="r"><label for="fail">Если сервер обезличивания недоступен</label><select id="fail" class="sel"><option selected>Блокировать отправку</option><option>Предупредить пользователя</option></select></div>
+        <div class="r"><label for="tmo">Тайм-аут проверки</label><select id="tmo" class="sel"><option>1 с</option><option selected>3 с</option><option>5 с</option></select></div>
+        <div class="r" style="border-bottom: 0"><span>Срок хранения журнала</span><span>90 дней</span></div>
+      </section>
+      <section class="card">
+        <h2 style="margin: 0 0 6px; font-size: 17px">Модели обнаружения</h2>
+        <div class="r"><span>Правила: ИИН/БИН, телефоны KZ, IBAN KZ, карты (Луна), номера документов</span><span class="st">активны</span></div>
+        <div class="r"><span>NER: многоязычная модель (казахский, русский, английский)</span><span class="st">активна</span></div>
+        <div class="r"><span>Словарь казахских имён и фамилий</span><span class="st">загружен</span></div>
+        <div class="r" style="border-bottom: 0"><span>Порог уверенности NER</span><span class="mono">0.60</span></div>
+      </section>
+      <section class="card">
+        <h2 style="margin: 0 0 6px; font-size: 17px">ИИ-сервисы и развёртывание</h2>
+        <div class="r"><span>Разрешённые сервисы</span><span>ChatGPT, Gemini</span></div>
+        <div class="r"><span>Ключи провайдеров для API-прокси</span><span>хранятся на сервере · ···· 91c2</span></div>
+        <div class="r"><span>Развёртывание</span><span class="mono">Docker Compose · сервер организации</span></div>
+        <div class="r" style="border-bottom: 0"><span>Версия</span><span class="mono">0.1.0-prototype</span></div>
+      </section>
+    </div>
+    <div><button type="button" style="padding: 11px 16px; border-radius: 8px; border: 0; background: #0F6E68; color: #FFFFFF; font: inherit; font-weight: 600">Сохранить настройки</button></div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":980}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
