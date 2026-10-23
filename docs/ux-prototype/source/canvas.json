@@ -1,0 +1,44 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-10-18T20:35:00Z"},
+  "title": "PII Gateway Prototype",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 1040, "title": "00 · Обзор и покрытие требований"},
+    "U1-Compose.dc.html": {"x": 0, "y": 1400, "w": 1280, "h": 800, "title": "U1 · Ввод текста и подсветка данных", "is_interactive": true},
+    "U2-Review.dc.html": {"x": 1360, "y": 1400, "w": 1280, "h": 800, "title": "U2 · Проверка и редактирование найденного", "is_interactive": true},
+    "U3-Preview.dc.html": {"x": 2720, "y": 1400, "w": 1280, "h": 800, "title": "U3 · Что уходит в ИИ-сервис", "is_interactive": true},
+    "U4-Response.dc.html": {"x": 4080, "y": 1400, "w": 1280, "h": 800, "title": "U4 · Ответ с восстановленными данными", "is_interactive": true},
+    "U5-Blocked.dc.html": {"x": 0, "y": 2570, "w": 1280, "h": 800, "title": "U5 · Блокировка по политике (номер карты)"},
+    "U6-Kazakh.dc.html": {"x": 1360, "y": 2570, "w": 1280, "h": 800, "title": "U6 · Gemini, казахский текст, интерфейс на казахском"},
+    "U7-Mixed.dc.html": {"x": 2720, "y": 2570, "w": 1280, "h": 800, "title": "U7 · Смешанный текст KZ/RU/EN, ручное добавление"},
+    "U8-Unavailable.dc.html": {"x": 4080, "y": 2570, "w": 1280, "h": 800, "title": "U8 · Сервер недоступен (fail-closed)"},
+    "X1-Popup.dc.html": {"x": 0, "y": 3740, "w": 400, "h": 640, "title": "X1 · Окно расширения: статус и настройки"},
+    "X2-Login.dc.html": {"x": 480, "y": 3740, "w": 400, "h": 640, "title": "X2 · Вход в расширение"},
+    "A1-Login.dc.html": {"x": 0, "y": 4750, "w": 1280, "h": 800, "title": "A1 · Админ-панель: вход", "expand": "fill"},
+    "A2-Dashboard.dc.html": {"x": 1360, "y": 4750, "w": 1280, "h": 900, "title": "A2 · Обзор и статистика", "expand": "fill"},
+    "A3-Policies.dc.html": {"x": 2720, "y": 4750, "w": 1280, "h": 980, "title": "A3 · Политики обработки", "expand": "fill"},
+    "A4-Logs.dc.html": {"x": 4080, "y": 4750, "w": 1280, "h": 900, "title": "A4 · Журнал срабатываний", "expand": "fill"},
+    "A5-Users.dc.html": {"x": 5440, "y": 4750, "w": 1280, "h": 800, "title": "A5 · Пользователи и роли", "expand": "fill"},
+    "A6-Settings.dc.html": {"x": 6800, "y": 4750, "w": 1280, "h": 980, "title": "A6 · Безопасность и модели", "expand": "fill"},
+    "P1-API.dc.html": {"x": 0, "y": 6100, "w": 1280, "h": 1500, "title": "P1 · API прокси: запросы и ответы"}
+  },
+  "order": [
+    "Main.dc.html",
+    "U1-Compose.dc.html", "U2-Review.dc.html", "U3-Preview.dc.html", "U4-Response.dc.html",
+    "U5-Blocked.dc.html", "U6-Kazakh.dc.html", "U7-Mixed.dc.html", "U8-Unavailable.dc.html",
+    "X1-Popup.dc.html", "X2-Login.dc.html",
+    "A1-Login.dc.html", "A2-Dashboard.dc.html", "A3-Policies.dc.html", "A4-Logs.dc.html", "A5-Users.dc.html", "A6-Settings.dc.html",
+    "P1-API.dc.html"
+  ],
+  "notes": {
+    "t_main": {"x": 0, "y": -300, "text": "PII Gateway — прототип", "kind": "title1", "maxW": 1280},
+    "t_flow": {"x": 0, "y": 1150, "text": "Основной сценарий пользователя: расширение + ChatGPT (кликабельно U1 → U4)", "kind": "title1", "maxW": 5360},
+    "t_alt": {"x": 0, "y": 2320, "text": "Политики, языки, смешанный текст, отказ сервера", "kind": "title1", "maxW": 5360},
+    "t_ext": {"x": 0, "y": 3490, "text": "Окно расширения", "kind": "title1", "maxW": 880},
+    "t_admin": {"x": 0, "y": 4500, "text": "Панель администратора (служба ИБ)", "kind": "title1", "maxW": 8080},
+    "t_api": {"x": 0, "y": 5850, "text": "API для программного доступа", "kind": "title1", "maxW": 1280}
+  },
+  "designSystems": []
+}

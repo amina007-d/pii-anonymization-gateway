@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>U7 — смешанный текст и ручное добавление</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.pii{padding:1px 4px;border-radius:4px;font-weight:500}
+.person{background:#DCE6FB;color:#1E47A8}.iin{background:#FCE3C7;color:#8A3B06}.phone{background:#E8DEFA;color:#5530A6}
+.email{background:#CDEDE9;color:#0B5A55}
+.sel{background:#B9D3F5;color:#16181A;padding:1px 2px}
+.item{display:grid;grid-template-columns:24px 104px minmax(0,1fr) 100px 84px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #E3E5E2;font-size:14px}
+.tok{font-family:'IBM Plex Mono',monospace;font-size:13px;color:#3D423F}
+.sug{border:1px dashed #8A9190;color:#5B615D;background:#FFFFFF}
+.lang{padding:3px 8px;border-radius:6px;background:#FFFFFF;border:1px solid #C9CDC8;font-size:12px;font-weight:600}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #D9DCD8; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column">
+  <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: #ECEEEB; border-bottom: 1px solid #C9CDC8">
+    <div style="display: flex; gap: 6px" aria-hidden="true"><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span></div>
+    <div style="flex: 1; height: 30px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #3D423F">chatgpt.com</div>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <div style="flex: 1; background: #FFFFFF; display: flex; flex-direction: column; padding: 28px 48px; gap: 16px">
+      <div style="display: flex; gap: 8px; align-items: center"><span style="font-size: 14px; color: #5B615D">Определены языки:</span><span class="lang">RU</span><span class="lang">KZ</span><span class="lang">EN</span><span style="font-size: 14px; color: #5B615D">— смешанный текст</span></div>
+      <div style="flex: 1"></div>
+      <div style="position: relative; border: 2px solid #0F6E68; border-radius: 14px; padding: 18px 20px; font-size: 16px; line-height: 1.85">
+        <div style="position: absolute; left: 300px; top: -96px; width: 290px; background: #16181A; color: #FFFFFF; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 13px">
+          <div style="font-weight: 600">Отметить «Бекжана» как персональные данные</div>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <label for="mtype" style="color: #C9CDC8">Тип</label>
+            <select id="mtype" style="flex: 1; padding: 6px; border-radius: 6px; border: 0; font: inherit"><option>ФИО</option><option>Организация</option><option>Адрес</option><option>Другое</option></select>
+            <button type="button" style="padding: 6px 10px; border-radius: 6px; border: 0; background: #2BA39B; color: #0B2B29; font: inherit; font-weight: 700">Добавить</button>
+          </div>
+        </div>
+        Привет! <span class="pii person">Айжан Мұратқызы</span> просила отправить договор на <span class="pii email">aizhan.m@example.kz</span>. <span class="pii sug" title="Предложение: низкая уверенность">Бүгін</span> <span class="pii person">Болат Ахметов</span> позвонил с номера <span class="pii phone">+7 747 890 12 34</span>, его ИИН <span class="pii iin">910405300001</span>. Также подключи <span class="sel">Бекжана</span> из отдела продаж. Please summarize this in English.
+      </div>
+    </div>
+    <div style="width: 560px; background: #F6F7F5; border-left: 1px solid #C9CDC8; display: flex; flex-direction: column; padding: 22px; gap: 14px; box-sizing: border-box">
+      <h1 style="margin: 0; font-size: 19px">Проверьте данные перед отправкой</h1>
+      <div style="font-size: 14px; color: #3D423F">Найдено автоматически: 5 · предложено (низкая уверенность): 1 · добавлено вручную: 1</div>
+      <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 10px; padding: 4px 14px">
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть Айжан Мұратқызы"><span class="pii person">ФИО · KZ</span><span>Айжан Мұратқызы</span><span class="tok">&lt;PERSON_1&gt;</span><span></span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть e-mail"><span class="pii email">E-mail</span><span>aizhan.m@example.kz</span><span class="tok">&lt;EMAIL_1&gt;</span><span></span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть Болат Ахметов"><span class="pii person">ФИО · KZ</span><span>Болат Ахметов</span><span class="tok">&lt;PERSON_2&gt;</span><span></span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть телефон"><span class="pii phone">Телефон</span><span>+7 747 890 12 34</span><span class="tok">&lt;PHONE_1&gt;</span><span></span></div>
+        <div class="item"><input type="checkbox" checked aria-label="Скрыть ИИН"><span class="pii iin">ИИН ✓</span><span>910405300001</span><span class="tok">&lt;IIN_1&gt;</span><span></span></div>
+        <div class="item"><input type="checkbox" aria-label="Скрыть Бүгін"><span class="pii sug">ФИО?</span><span>Бүгін</span><span class="tok">—</span><span style="font-size: 12px; color: #5B615D">уверен. 0,41</span></div>
+        <div class="item" style="border-bottom: 0; background: #EEF5FD; margin: 0 -14px; padding-left: 14px; padding-right: 14px"><input type="checkbox" checked aria-label="Скрыть Бекжана"><span class="pii person">ФИО</span><span>Бекжана</span><span class="tok">&lt;PERSON_3&gt;</span><span style="font-size: 12px; color: #1E47A8; font-weight: 600">вручную</span></div>
+      </div>
+      <div style="font-size: 13px; line-height: 1.5; color: #5B615D">Значения с уверенностью ниже порога (0,60) показываются как предложения и не отмечены по умолчанию: «Бүгін» здесь означает «сегодня». Ручные отметки сохраняются как обратная связь для улучшения распознавания — без самого значения, только тип и контекст языка.</div>
+      <div style="display: flex; gap: 10px; margin-top: auto">
+        <button type="button" style="padding: 11px 14px; border-radius: 8px; border: 1px solid #C9CDC8; background: #FFFFFF; font: inherit">Назад</button>
+        <div style="flex: 1"></div>
+        <button type="button" style="padding: 11px 16px; border-radius: 8px; border: 0; background: #0F6E68; color: #FFFFFF; font: inherit; font-weight: 600">Далее: что получит ИИ</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

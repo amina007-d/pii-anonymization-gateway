@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>U5 — блокировка по политике</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.pii{padding:1px 4px;border-radius:4px;font-weight:500}
+.person{background:#DCE6FB;color:#1E47A8}.phone{background:#E8DEFA;color:#5530A6}.card{background:#FBD9D5;color:#A0261A;outline:2px solid #A0261A}
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #E3E5E2;font-size:14px}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #D9DCD8; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column">
+  <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: #ECEEEB; border-bottom: 1px solid #C9CDC8">
+    <div style="display: flex; gap: 6px" aria-hidden="true"><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span></div>
+    <div style="flex: 1; height: 30px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #3D423F">chatgpt.com</div>
+    <div style="height: 30px; padding: 0 10px; border-radius: 6px; background: #A0261A; color: #FFFFFF; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg>Отправка заблокирована
+    </div>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <div style="flex: 1; background: #FFFFFF; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 56px">
+      <div style="border: 2px solid #A0261A; border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px">
+        <p style="margin: 0; font-size: 16px; line-height: 1.75">Проверь, почему не прошёл платёж по карте <span class="pii card">4111 1111 1111 1111</span>, владелец <span class="pii person">Ольга Смирнова</span>, телефон для связи <span class="pii phone">8 701 999 88 77</span>. Составь ответ клиенту.</p>
+        <div style="display: flex; justify-content: flex-end"><button type="button" disabled style="padding: 10px 16px; border-radius: 8px; border: 0; background: #C9CDC8; color: #3D423F; font: inherit; font-size: 14px; font-weight: 600">Отправить</button></div>
+      </div>
+    </div>
+    <div style="width: 420px; background: #F6F7F5; border-left: 1px solid #C9CDC8; display: flex; flex-direction: column; padding: 22px; gap: 16px; box-sizing: border-box">
+      <div style="background: #FCEDEB; border: 1px solid #E8A59D; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 17px; font-weight: 700; color: #7E1D13">Отправка заблокирована политикой организации</div>
+        <div style="font-size: 14px; line-height: 1.5; color: #3D423F">В тексте найден номер банковской карты. Для этого типа данных администратор установил действие <b>«Блокировать»</b>: такие данные нельзя отправлять даже в виде псевдонима.</div>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <div class="row"><span class="pii card" style="outline: 0">Номер карты</span><span>1 · проверка Луна пройдена · <b style="color: #A0261A">блок</b></span></div>
+        <div class="row"><span class="pii person">ФИО</span><span>1 · заменить</span></div>
+        <div class="row"><span class="pii phone">Телефон</span><span>1 · заменить</span></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <button type="button" style="padding: 12px 14px; border-radius: 8px; border: 0; background: #0F6E68; color: #FFFFFF; font: inherit; font-weight: 600; text-align: center">Удалить номер карты из текста и продолжить</button>
+        <button type="button" style="padding: 12px 14px; border-radius: 8px; border: 1px solid #C9CDC8; background: #FFFFFF; font: inherit">Отменить отправку</button>
+      </div>
+      <div style="margin-top: auto; font-size: 13px; line-height: 1.5; color: #5B615D">Событие записано в журнал службы ИБ: тип данных, действие и время — без номера карты. Изменить политику может только администратор.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

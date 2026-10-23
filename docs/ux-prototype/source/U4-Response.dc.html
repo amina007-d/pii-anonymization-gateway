@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>U4 — ответ с восстановленными данными</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.rs{border-bottom:2px dotted #0F6E68;font-weight:500}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #D9DCD8; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column">
+  <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: #ECEEEB; border-bottom: 1px solid #C9CDC8">
+    <div style="display: flex; gap: 6px" aria-hidden="true"><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span></div>
+    <div style="flex: 1; height: 30px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #3D423F">chatgpt.com</div>
+    <div style="height: 30px; padding: 0 10px; border-radius: 6px; background: #0F6E68; color: #FFFFFF; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway
+    </div>
+  </div>
+  <div style="flex: 1; background: #FFFFFF; display: flex; flex-direction: column; padding: 28px 120px; gap: 18px; min-height: 0">
+    <div style="align-self: flex-end; max-width: 720px; background: #F0F1EF; border-radius: 14px; padding: 14px 16px; font-size: 14px; line-height: 1.6; color: #3D423F">Составь официальное письмо от ТОО «Альфа Сервис» (БИН 180840012344) клиенту Иванову Сергею Петровичу (ИИН 850315300009, уд. личности № 045612378)… <span style="display: block; margin-top: 6px; font-size: 12px; color: #0F6E68; font-weight: 600">Отправлено обезличенно · 10 значений скрыто</span></div>
+    <div style="display: flex; gap: 10px; align-items: center">
+      <span style="padding: 5px 10px; border-radius: 6px; background: #CDEDE9; color: #0B5A55; font-size: 13px; font-weight: 600">Восстановлено 10 значений · 0,04 с</span>
+      <span style="font-size: 13px; color: #5B615D">Восстановленные значения подчёркнуты пунктиром</span>
+      <div style="flex: 1"></div>
+      <div role="group" aria-label="Режим просмотра ответа" style="display: flex; border: 1px solid #C9CDC8; border-radius: 8px; overflow: hidden">
+        <button type="button" aria-pressed="true" style="padding: 8px 12px; border: 0; background: #16181A; color: #FFFFFF; font: inherit; font-size: 13px">С данными</button>
+        <button type="button" aria-pressed="false" style="padding: 8px 12px; border: 0; background: #FFFFFF; color: #16181A; font: inherit; font-size: 13px">Как видел ИИ</button>
+      </div>
+    </div>
+    <div style="font-size: 16px; line-height: 1.75; display: flex; flex-direction: column; gap: 12px; max-width: 900px">
+      <p style="margin: 0">Уважаемый <span class="rs">Иванов Сергей Петрович</span>!</p>
+      <p style="margin: 0"><span class="rs">ТОО «Альфа Сервис»</span> (БИН <span class="rs">180840012344</span>) напоминает о необходимости оплаты по договору. Просим перечислить сумму на счёт <span class="rs">KZ75125KZT1001300335</span>. Оплата будет зачислена по ИИН <span class="rs">850315300009</span> и удостоверению личности № <span class="rs">045612378</span>.</p>
+      <p style="margin: 0">Документы будут доставлены по адресу: <span class="rs">г. Алматы, ул. Сатпаева, д. 5, кв. 10</span>.</p>
+      <p style="margin: 0">По всем вопросам обращайтесь к менеджеру <span class="rs">Мария Ким</span> по телефону <span class="rs">+7 (705) 111-22-33</span> или по почте <span class="rs">m.kim@example.kz</span>.</p>
+      <p style="margin: 0">С уважением,<br>отдел по работе с клиентами</p>
+    </div>
+    <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: 14px">
+      <span style="color: #5B615D">Словарь замен для этого запроса будет удалён через 15 минут</span>
+      <a href="Main.dc.html" style="padding: 10px 14px; border: 1px solid #C9CDC8; border-radius: 8px; color: #16181A; text-decoration: none">К обзору прототипа</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

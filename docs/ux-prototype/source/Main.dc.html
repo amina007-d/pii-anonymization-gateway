@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Обзор прототипа PII Gateway</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:14px;font-weight:500}
+.cell{padding:10px 12px;border-bottom:1px solid #E3E5E2;font-size:14px;vertical-align:top}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1040px; box-sizing: border-box; padding: 56px 64px; background: #F6F7F5; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px">
+    <div style="display: flex; flex-direction: column; gap: 10px; max-width: 760px">
+      <div style="font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: #0F6E68; font-weight: 600">Дипломный проект · прототип UX (DIP-15)</div>
+      <h1 style="margin: 0; font-size: 44px; line-height: 1.1; font-weight: 700">PII Gateway: обезличивание персональных данных перед отправкой в ИИ-сервисы</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 1.5; color: #3D423F">Расширение браузера находит персональные данные в запросе, заменяет их псевдонимами, отправляет в ChatGPT или Gemini только обезличенный текст и восстанавливает исходные значения в ответе. Служба ИБ настраивает политики и видит журнал без исходных значений.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #3D423F; text-align: right">
+      <div>Все данные на макетах вымышленные</div>
+      <div>Цифры статистики — демо-данные</div>
+      <a href="U1-Compose.dc.html" style="margin-top: 8px; padding: 12px 18px; background: #0F6E68; color: #FFFFFF; border-radius: 8px; text-decoration: none; font-weight: 600; text-align: center">Открыть основной сценарий</a>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <h2 style="margin: 0; font-size: 20px">Типы персональных данных и их псевдонимы</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px">
+      <span class="chip" style="background: #DCE6FB; color: #1E47A8">ФИО · PERSON</span>
+      <span class="chip" style="background: #FCE3C7; color: #8A3B06">ИИН / БИН · IIN, BIN</span>
+      <span class="chip" style="background: #E8DEFA; color: #5530A6">Телефон · PHONE</span>
+      <span class="chip" style="background: #CDEDE9; color: #0B5A55">E-mail · EMAIL</span>
+      <span class="chip" style="background: #F1E6CC; color: #6B4C12">Адрес · ADDRESS</span>
+      <span class="chip" style="background: #F9DCEB; color: #8E1F5A">Номер документа · ID_DOC</span>
+      <span class="chip" style="background: #E1E5EB; color: #344054">IBAN · IBAN</span>
+      <span class="chip" style="background: #FBD9D5; color: #A0261A">Номер карты · CARD</span>
+      <span class="chip" style="background: #D9EFD6; color: #27612A">Организация · ORG</span>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <h2 style="margin: 0; font-size: 20px">Покрытие сценариев и требований</h2>
+    <table style="border-collapse: collapse; width: 100%; background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 8px">
+      <thead>
+        <tr style="background: #EEF0ED; text-align: left">
+          <th class="cell" style="width: 300px">Сценарий</th>
+          <th class="cell" style="width: 220px">Экраны</th>
+          <th class="cell">Что показано</th>
+          <th class="cell" style="width: 170px">Требования</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell">Обнаружение и подсветка данных (RU)</td><td class="cell">U1</td><td class="cell">Все 9 типов данных в одном запросе, проверка контрольных разрядов ИИН/БИН</td><td class="cell">FR-1, FR-2</td></tr>
+        <tr><td class="cell">Проверка, редактирование, добавление</td><td class="cell">U2, U7</td><td class="cell">Снять отметку, сменить тип, отметить пропущенное вручную, единый псевдоним для одной сущности</td><td class="cell">FR-3, FR-5</td></tr>
+        <tr><td class="cell">Отправка обезличенного текста</td><td class="cell">U3</td><td class="cell">Предпросмотр того, что получит ИИ-сервис, время обработки</td><td class="cell">FR-3, NFR-1</td></tr>
+        <tr><td class="cell">Восстановление ответа</td><td class="cell">U4</td><td class="cell">Потоковый ответ, восстановленные значения, просмотр «как видел ИИ»</td><td class="cell">FR-4</td></tr>
+        <tr><td class="cell">Политики: предупредить / заблокировать</td><td class="cell">U2, U5, A3</td><td class="cell">Номер документа требует подтверждения, номер карты блокирует отправку</td><td class="cell">FR-6</td></tr>
+        <tr><td class="cell">Казахский и смешанный текст, Gemini</td><td class="cell">U6, U7</td><td class="cell">Интерфейс на казахском, ЖСН, код-свитчинг KZ/RU/EN</td><td class="cell">FR-1, FR-5</td></tr>
+        <tr><td class="cell">Отказ сервера обезличивания</td><td class="cell">U8</td><td class="cell">Отправка приостанавливается, данные не уходят без проверки</td><td class="cell">NFR-4</td></tr>
+        <tr><td class="cell">Расширение: вход, статус, режим</td><td class="cell">X1, X2</td><td class="cell">Вход по учётной записи организации (JWT), режимы «проверять» / «автоматически»</td><td class="cell">FR-5, NFR-2</td></tr>
+        <tr><td class="cell">Администрирование</td><td class="cell">A1–A6</td><td class="cell">Политики, журнал без исходных значений, роли, срок хранения словаря, статус моделей</td><td class="cell">FR-6, FR-7, NFR-2, NFR-3, NFR-4</td></tr>
+        <tr><td class="cell">Программный доступ</td><td class="cell">P1</td><td class="cell">Обезличивание, прокси к LLM с потоковым ответом, восстановление</td><td class="cell">FR-4, FR-8</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1040}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>U1 — ввод текста и подсветка данных</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.pii{padding:1px 4px;border-radius:4px;font-weight:500}
+.person{background:#DCE6FB;color:#1E47A8}.iin{background:#FCE3C7;color:#8A3B06}.phone{background:#E8DEFA;color:#5530A6}
+.email{background:#CDEDE9;color:#0B5A55}.addr{background:#F1E6CC;color:#6B4C12}.iddoc{background:#F9DCEB;color:#8E1F5A}
+.iban{background:#E1E5EB;color:#344054}.org{background:#D9EFD6;color:#27612A}
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #E3E5E2;font-size:14px}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #D9DCD8; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-direction: column">
+  <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: #ECEEEB; border-bottom: 1px solid #C9CDC8">
+    <div style="display: flex; gap: 6px" aria-hidden="true"><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #C9CDC8"></span></div>
+    <div style="flex: 1; height: 30px; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #3D423F">chatgpt.com</div>
+    <div style="height: 30px; padding: 0 10px; border-radius: 6px; background: #0F6E68; color: #FFFFFF; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway · 10
+    </div>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <div style="flex: 1; background: #FFFFFF; display: flex; flex-direction: column; padding: 32px 56px 28px; gap: 16px">
+      <div style="font-size: 14px; color: #5B615D">ИИ-сервис (макет страницы чата)</div>
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #9AA19C">Новый чат</div>
+      <div style="border: 2px solid #0F6E68; border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; background: #FFFFFF">
+        <p style="margin: 0; font-size: 16px; line-height: 1.75">Составь официальное письмо от <span class="pii org">ТОО «Альфа Сервис»</span> (БИН <span class="pii iin">180840012344</span>) клиенту <span class="pii person">Иванову Сергею Петровичу</span> (ИИН <span class="pii iin">850315300009</span>, уд. личности № <span class="pii iddoc">045612378</span>). Напомни, что оплату по договору нужно перевести на счёт <span class="pii iban">KZ75125KZT1001300335</span>. Документы доставим по адресу: <span class="pii addr">г. Алматы, ул. Сатпаева, д. 5, кв. 10</span>. По вопросам — менеджер <span class="pii person">Мария Ким</span>, <span class="pii phone">+7 (705) 111-22-33</span>, <span class="pii email">m.kim@example.kz</span>.</p>
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div style="font-size: 13px; color: #0F6E68; font-weight: 500">Отправка приостановлена расширением до проверки</div>
+          <a href="U2-Review.dc.html" style="padding: 10px 16px; border-radius: 8px; background: #16181A; color: #FFFFFF; text-decoration: none; font-size: 14px; font-weight: 600">Отправить</a>
+        </div>
+      </div>
+    </div>
+    <div style="width: 380px; background: #F6F7F5; border-left: 1px solid #C9CDC8; display: flex; flex-direction: column; padding: 20px; gap: 16px; box-sizing: border-box">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6E68" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #27612A"><span style="width: 8px; height: 8px; border-radius: 4px; background: #2F8A3A" aria-hidden="true"></span>Защита включена</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 28px; font-weight: 700">10</div>
+        <div style="font-size: 14px; color: #3D423F">персональных данных найдено за 0,18 с</div>
+        <div style="font-size: 13px; color: #5B615D">Язык текста: русский</div>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <div class="row"><span class="pii person">ФИО</span><span>2</span></div>
+        <div class="row"><span class="pii iin">ИИН / БИН</span><span>2 · контрольный разряд верен</span></div>
+        <div class="row"><span class="pii iddoc">Номер документа</span><span style="color: #8E1F5A; font-weight: 600">1 · нужно подтверждение</span></div>
+        <div class="row"><span class="pii iban">IBAN</span><span>1 · формат KZ верен</span></div>
+        <div class="row"><span class="pii addr">Адрес</span><span>1</span></div>
+        <div class="row"><span class="pii phone">Телефон</span><span>1</span></div>
+        <div class="row"><span class="pii email">E-mail</span><span>1</span></div>
+        <div class="row"><span class="pii org">Организация</span><span>1</span></div>
+      </div>
+      <a href="U2-Review.dc.html" style="margin-top: auto; padding: 13px 16px; border-radius: 8px; background: #0F6E68; color: #FFFFFF; text-decoration: none; font-weight: 600; text-align: center">Проверить найденное</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>A5 — пользователи и роли</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#0F6E68}a:hover{color:#0A4F4B}
+.nav{display:block;padding:10px 12px;border-radius:8px;color:#16181A;text-decoration:none;font-size:15px}
+.nav-on{background:#DDEFEC;color:#0A4F4B;font-weight:600}
+.c{padding:11px 12px;border-bottom:1px solid #E3E5E2;font-size:14px;text-align:left;vertical-align:top}
+.sel{padding:7px 8px;border-radius:6px;border:1px solid #C9CDC8;font:inherit;font-size:14px;background:#FFFFFF}
+.role{background:#FFFFFF;border:1px solid #E3E5E2;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 800px; box-sizing: border-box; background: #F6F7F5; font-family: 'IBM Plex Sans', sans-serif; color: #16181A; display: flex; flex-wrap: wrap">
+  <nav style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; padding: 22px 14px; background: #FFFFFF; border-right: 1px solid #E3E5E2; display: flex; flex-direction: column; gap: 4px">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; padding: 0 12px 16px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6E68" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>PII Gateway
+    </div>
+    <a class="nav" href="A2-Dashboard.dc.html">Обзор</a>
+    <a class="nav" href="A3-Policies.dc.html">Политики</a>
+    <a class="nav" href="A4-Logs.dc.html">Журнал срабатываний</a>
+    <a class="nav nav-on" href="A5-Users.dc.html">Пользователи и роли</a>
+    <a class="nav" href="A6-Settings.dc.html">Безопасность и модели</a>
+    <div style="margin-top: auto; padding: 12px; font-size: 13px; color: #5B615D">a.nurlanov@example.kz<br>Администратор</div>
+  </nav>
+  <main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+      <h1 style="margin: 0; font-size: 26px">Пользователи и роли</h1>
+      <button type="button" style="padding: 11px 16px; border-radius: 8px; border: 0; background: #0F6E68; color: #FFFFFF; font: inherit; font-weight: 600">Пригласить пользователя</button>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
+      <div class="role"><b>Администратор</b><span>Политики, пользователи, настройки безопасности, журнал</span></div>
+      <div class="role"><b>Аудитор</b><span>Только просмотр журнала и статистики</span></div>
+      <div class="role"><b>Пользователь</b><span>Работа через расширение, без доступа к панели</span></div>
+      <div class="role"><b>Сервисный аккаунт</b><span>Доступ к API-прокси по ключу, без интерфейса</span></div>
+    </div>
+    <div style="overflow-x: auto; background: #FFFFFF; border: 1px solid #E3E5E2; border-radius: 12px">
+      <table style="width: 100%; min-width: 760px; border-collapse: collapse">
+        <thead><tr style="background: #EEF0ED"><th class="c">Пользователь</th><th class="c">Роль</th><th class="c">Последняя активность</th><th class="c">Статус</th></tr></thead>
+        <tbody>
+          <tr><td class="c">Арман Нурланов<br><span style="color: #5B615D">a.nurlanov@example.kz</span></td><td class="c"><select class="sel" aria-label="Роль Армана Нурланова"><option selected>Администратор</option><option>Аудитор</option><option>Пользователь</option></select></td><td class="c">сейчас</td><td class="c">Активен</td></tr>
+          <tr><td class="c">Гульнар Есенова<br><span style="color: #5B615D">g.esenova@example.kz</span></td><td class="c"><select class="sel" aria-label="Роль Гульнар Есеновой"><option>Администратор</option><option selected>Аудитор</option><option>Пользователь</option></select></td><td class="c">19.10 11:20</td><td class="c">Активен</td></tr>
+          <tr><td class="c">Мария Ким<br><span style="color: #5B615D">m.kim@example.kz</span></td><td class="c"><select class="sel" aria-label="Роль Марии Ким"><option>Администратор</option><option>Аудитор</option><option selected>Пользователь</option></select></td><td class="c">19.10 14:32</td><td class="c">Активен</td></tr>
+          <tr><td class="c">Дана Омарова<br><span style="color: #5B615D">d.omarova@example.kz</span></td><td class="c"><select class="sel" aria-label="Роль Даны Омаровой"><option>Администратор</option><option>Аудитор</option><option selected>Пользователь</option></select></td><td class="c">19.10 13:58</td><td class="c">Активен</td></tr>
+          <tr><td class="c">crm-service<br><span style="color: #5B615D">ключ API ···· 7f3a</span></td><td class="c">Сервисный аккаунт</td><td class="c">19.10 13:12</td><td class="c">Активен</td></tr>
+          <tr><td class="c">Нурлан Садыков<br><span style="color: #5B615D">n.sadykov@example.kz</span></td><td class="c"><select class="sel" aria-label="Роль Нурлана Садыкова"><option>Администратор</option><option>Аудитор</option><option selected>Пользователь</option></select></td><td class="c">15.10 09:44</td><td class="c">Отключён</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size: 13px; color: #5B615D">Вход выполняется по токену JWT; права проверяются на сервере при каждом запросе.</div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
