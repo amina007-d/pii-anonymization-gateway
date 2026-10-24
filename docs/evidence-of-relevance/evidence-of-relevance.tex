@@ -95,24 +95,24 @@ This document presents the evidence collected to verify that the problem address
 
 The survey was conducted as an anonymous online questionnaire (Google Forms) from 20 to 22 October 2026. Initially, semi-structured interviews were planned; by agreement with the supervisor, they were replaced with a survey in order to reach more respondents within the available time. The questionnaire contained 21 questions grouped into seven sections: consent, information about the respondent, use of AI services, personal data in prompts, expectations from the system, questions for information security specialists and managers (optional), and a final open question.
 
-No names, e-mail addresses or names of organizations were collected, and participation was voluntary; all respondents gave consent to the use of their answers in anonymized form. The questionnaire was distributed through the team's academic and professional contacts (convenience sampling). The analysis includes all 35 complete responses received by the time the data were exported on 22 October 2026; three responses submitted after the export are not included, so that all project documents use the same sample. The questionnaire and the anonymized responses are stored in the \texttt{docs/survey} directory of the project repository. Percentages below are calculated from all 35 respondents unless stated otherwise; questions with multiple answers may sum to more than 100\%.
+No names, e-mail addresses or names of organizations were collected, and participation was voluntary; all respondents gave consent to the use of their answers in anonymized form. The questionnaire was distributed through the team's academic and professional contacts (convenience sampling). In total, 30 complete responses were received. The questionnaire and the anonymized responses are stored in the \texttt{docs/survey} directory of the project repository. Percentages below are calculated from all 30 respondents unless stated otherwise; questions with multiple answers may sum to more than 100\%.
 
 \section{Respondents}
 
-The distribution of respondents by field is given in Table~\ref{tab:resp}. Twenty-eight respondents (80\%) work with personal data of clients, employees, students or patients: 19 regularly and 9 occasionally.
+The distribution of respondents by field is given in Table~\ref{tab:resp}. Twenty-three respondents (77\%) work with personal data of clients, employees, students or patients: 14 regularly and 9 occasionally.
 
 \begin{table}[htbp]
-\caption{Respondents by field of work ($n=35$)}\label{tab:resp}
+\caption{Respondents by field of work ($n=30$)}\label{tab:resp}
 \small
 \begin{tabularx}{\linewidth}{LC{2.4cm}C{2.4cm}}
 \toprule
 \thead \textbf{Field} & \textbf{Respondents} & \textbf{Share} \\ \midrule
-Students & 12 & 34\% \\ \rl
-Information technology & 12 & 34\% \\ \rl
-Healthcare & 4 & 11\% \\ \rl
-Education & 3 & 9\% \\ \rl
-Banking and finance & 2 & 6\% \\ \rl
-Human resources & 2 & 6\% \\
+Students & 10 & 33\% \\ \rl
+Information technology & 9 & 30\% \\ \rl
+Healthcare & 4 & 13\% \\ \rl
+Education & 3 & 10\% \\ \rl
+Banking and finance & 2 & 7\% \\ \rl
+Human resources & 2 & 7\% \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -121,61 +121,61 @@ Human resources & 2 & 6\% \\
 
 \subsection{Use of AI Services}
 
-All respondents use generative AI services: 25 (71\%) every day, 9 (26\%) several times a week and 1 (3\%) several times a month. The services used are shown in Figure~\ref{fig:services}. ChatGPT and Gemini, the target services of the project, are used by 91\% and 74\% of respondents respectively; Claude is also widely used (63\%). The most frequent tasks are writing or editing letters and documents (60\%), study (57\%), summarizing documents (46\%), analysing data or tables (43\%) and translation (29\%) --- tasks in which users typically paste existing documents into the AI service.
+All respondents use generative AI services: 21 (70\%) every day and 9 (30\%) several times a week. The services used are shown in Figure~\ref{fig:services}. ChatGPT and Gemini, the target services of the project, are used by 90\% and 77\% of respondents respectively; Claude is also widely used (60\%). The most frequent tasks are writing or editing letters and documents (63\%), study (57\%), summarizing documents (50\%), analysing data or tables (43\%) and translation (33\%) --- tasks in which users typically paste existing documents into the AI service.
 
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   xbar, width=0.72\linewidth, height=4.2cm,
-  xmin=0, xmax=36, xlabel={Number of respondents},
+  xmin=0, xmax=32, xlabel={Number of respondents},
   symbolic y coords={Microsoft Copilot,Claude,Gemini,ChatGPT},
   ytick=data, nodes near coords, nodes near coords align={horizontal},
   bar width=9pt, enlarge y limits=0.2,
   tick label style={font=\small}, label style={font=\small},
   every node near coord/.append style={font=\small},
 ]
-\addplot[fill=gray!50, draw=gray!80] coordinates {(1,Microsoft Copilot) (22,Claude) (26,Gemini) (32,ChatGPT)};
+\addplot[fill=gray!50, draw=gray!80] coordinates {(1,Microsoft Copilot) (18,Claude) (23,Gemini) (27,ChatGPT)};
 \end{axis}
 \end{tikzpicture}
-\caption{AI services used for work or study ($n=35$, multiple answers)}\label{fig:services}
+\caption{AI services used for work or study ($n=30$, multiple answers)}\label{fig:services}
 \end{figure}
 
 \subsection{Personal Data in Prompts}
 
-Seventeen respondents (49\%) have pasted texts containing other people's personal data into AI services: 4 often and 13 occasionally; 3 respondents were not sure, and 15 (43\%) reported that they had never done so. The types of personal data that respondents encountered in such texts are shown in Figure~\ref{fig:types}. Full names (51\%), phone numbers (40\%) and e-mail addresses (37\%) are the most frequent; addresses were mentioned by 8 respondents, health data by 7 and IIN/BIN by 4.
+Sixteen respondents (53\%) have pasted texts containing other people's personal data into AI services: 3 often and 13 occasionally; 3 respondents were not sure, and 11 (37\%) reported that they had never done so. The types of personal data that respondents encountered in such texts are shown in Figure~\ref{fig:types}. Full names, phone numbers and e-mail addresses are the most frequent; addresses and health data were each mentioned by 7 respondents, and IIN/BIN by 4.
 
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
   xbar, width=0.72\linewidth, height=6.4cm,
-  xmin=0, xmax=21, xlabel={Number of respondents},
+  xmin=0, xmax=20, xlabel={Number of respondents},
   symbolic y coords={Card or IBAN number,Identity document number,IIN / BIN,Health data,Address,E-mail,Phone number,Full name},
   ytick=data, nodes near coords, nodes near coords align={horizontal},
   bar width=8pt, enlarge y limits=0.1,
   tick label style={font=\small}, label style={font=\small},
   every node near coord/.append style={font=\small},
 ]
-\addplot[fill=gray!50, draw=gray!80] coordinates {(2,Card or IBAN number) (3,Identity document number) (4,IIN / BIN) (7,Health data) (8,Address) (13,E-mail) (14,Phone number) (18,Full name)};
+\addplot[fill=gray!50, draw=gray!80] coordinates {(2,Card or IBAN number) (3,Identity document number) (4,IIN / BIN) (7,Health data) (7,Address) (12,E-mail) (13,Phone number) (17,Full name)};
 \end{axis}
 \end{tikzpicture}
-\caption{Types of personal data encountered in texts sent to AI services ($n=35$, multiple answers)}\label{fig:types}
+\caption{Types of personal data encountered in texts sent to AI services ($n=30$, multiple answers)}\label{fig:types}
 \end{figure}
 
-Current practices of handling personal data are inconsistent. Among all respondents, 12 (34\%) do not use AI services for such texts, 11 (31\%) replace personal data with placeholders such as ``Client A'', 8 (23\%) send texts as they are, and 4 (11\%) delete personal data manually. Among the 17 respondents who have pasted personal data, 6 send texts unchanged and 9 protect the data manually (7 by placeholders and 2 by deletion), which confirms both the risk and the demand for automation.
+Current practices of handling personal data are inconsistent. Among all respondents, 11 (37\%) do not use AI services for such texts, 9 (30\%) replace personal data with placeholders such as ``Client A'', 6 (20\%) send texts as they are, and 4 (13\%) delete personal data manually. Among the 16 respondents who have pasted personal data, 5 send texts unchanged and 9 protect the data manually (7 by placeholders and 2 by deletion), which confirms both the risk and the demand for automation.
 
 \subsection{Organizational Rules}
 
-Nineteen respondents (54\%) reported that their organization has rules or restrictions on the use of AI services, and one respondent (3\%) reported a complete ban; 11 (31\%) reported no rules, and 4 (11\%) did not know. Thus, organizations increasingly regulate AI tools, but a considerable share of users work without any rules.
+Sixteen respondents (53\%) reported that their organization has rules or restrictions on the use of AI services, and one respondent (3\%) reported a complete ban; 9 (30\%) reported no rules, and 4 (13\%) did not know. Thus, organizations increasingly regulate AI tools, but a considerable share of users work without any rules.
 
 \subsection{Languages of Prompts}
 
-Respondents write prompts in Russian (54\%), Kazakh (49\%), English (34\%) and in several languages within one prompt (40\%). Twenty-five respondents (71\%) use more than one language or mix languages, and 27 (77\%) use Kazakh or mixed-language prompts. Only two respondents write prompts exclusively in English.
+Respondents write prompts in Russian (63\%), Kazakh (53\%), English (37\%) and in several languages within one prompt (37\%). Twenty-two respondents (73\%) use more than one language or mix languages, and 23 (77\%) use Kazakh or mixed-language prompts. Only one respondent writes prompts exclusively in English.
 
 \subsection{Expectations from the System}
 
-On a scale from 1 to 5, the average willingness to use a system that automatically detects and hides personal data before sending text to AI services was 3.86; 23 respondents (66\%) chose 4 or 5. Among the 17 respondents who have pasted personal data, 14 (82\%) chose 4 or 5. The answers to the remaining questions about expectations are summarized in Table~\ref{tab:expect}.
+On a scale from 1 to 5, the average willingness to use a system that automatically detects and hides personal data before sending text to AI services was 3.97; 21 respondents (70\%) chose 4 or 5. Among the 16 respondents who have pasted personal data, 14 (88\%) chose 4 or 5. The answers to the remaining questions about expectations are summarized in Table~\ref{tab:expect}.
 
 \begin{table}[htbp]
 \caption{Expectations from the system}\label{tab:expect}
@@ -183,16 +183,16 @@ On a scale from 1 to 5, the average willingness to use a system that automatical
 \begin{tabularx}{\linewidth}{P{4.6cm}L}
 \toprule
 \thead \textbf{Question} & \textbf{Answers} \\ \midrule
-Priority between missed data and false alarms ($n=35$) & Detect all personal data even with occasional false alarms: 18 (51\%); both equally important: 9 (26\%); fewer false alarms even if rare data are missed: 8 (23\%) \\ \rl
-Preferred interaction ($n=35$) & Review detected data and confirm before sending: 20 (57\%); depends on the situation: 10 (29\%); fully automatic replacement: 5 (14\%) \\ \rl
-Acceptable additional delay ($n=35$) & Up to 1 s: 4 (11\%); 1--3 s: 16 (46\%); 3--5 s: 4 (11\%); more than 5 s is not critical: 11 (31\%) \\ \rl
-Importance of processing within the organization, scale 1--5 (optional, $n=28$) & 4 or 5: 14 (50\%); 3: 8 (29\%); 1 or 2: 6 (21\%) \\ \rl
-Need for a detection log and per-type rules (optional, $n=28$) & Yes: 15 (54\%); not sure: 11 (39\%); no: 2 (7\%) \\
+Priority between missed data and false alarms ($n=30$) & Detect all personal data even with occasional false alarms: 14 (47\%); both equally important: 9 (30\%); fewer false alarms even if rare data are missed: 7 (23\%) \\ \rl
+Preferred interaction ($n=30$) & Review detected data and confirm before sending: 17 (57\%); depends on the situation: 9 (30\%); fully automatic replacement: 4 (13\%) \\ \rl
+Acceptable additional delay ($n=30$) & Up to 1 s: 3 (10\%); 1--3 s: 15 (50\%); 3--5 s: 3 (10\%); more than 5 s is not critical: 9 (30\%) \\ \rl
+Importance of processing within the organization, scale 1--5 (optional, $n=24$) & 4 or 5: 12 (50\%); 3: 7 (29\%); 1 or 2: 5 (21\%) \\ \rl
+Need for a detection log and per-type rules (optional, $n=24$) & Yes: 13 (54\%); not sure: 10 (42\%); no: 1 (4\%) \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-In the open question about possible obstacles, most respondents answered that nothing would prevent them from using such a system. Six respondents named concerns about confidentiality, data leakage or trust in the service itself, which indicates that the system must process data within the organization and must not become an additional point of leakage.
+In the open question about possible obstacles, most respondents answered that nothing would prevent them from using such a system. Five respondents named concerns about confidentiality, data leakage or trust in the service itself, which indicates that the system must process data within the organization and must not become an additional point of leakage.
 
 \section{Verification of Assumptions}
 
@@ -204,12 +204,12 @@ Table~\ref{tab:assumptions} compares the assumptions of the project proposal wit
 \begin{tabularx}{\linewidth}{P{4.3cm}LP{2.3cm}}
 \toprule
 \thead \textbf{Assumption} & \textbf{Survey result} & \textbf{Status} \\ \midrule
-Users send texts containing personal data to AI services & 49\% have done so; 23\% of all respondents report sending such texts unchanged & Confirmed \\ \rl
-The most frequent data are names, IIN, phone numbers and addresses & Names, phone numbers and e-mail addresses are the most frequent; IIN/BIN was mentioned by 11\%; health data by 20\% & Partially confirmed \\ \rl
-Organizations restrict or prohibit AI tools & 54\% have rules, 3\% a ban, 31\% no rules & Partially confirmed \\ \rl
-Prompts are written in Kazakh, Russian and mixed language & 71\% use several languages or mix them; 77\% use Kazakh or mixed prompts & Confirmed \\ \rl
-ChatGPT and Gemini are the main target services & Used by 91\% and 74\%; Claude by 63\% & Confirmed, with Claude as a relevant addition \\ \rl
-Users would use an automatic protection tool & 66\% chose 4 or 5 of 5; 82\% among those who have pasted personal data & Confirmed \\
+Users send texts containing personal data to AI services & 53\% have done so; 20\% of all respondents send such texts unchanged & Confirmed \\ \rl
+The most frequent data are names, IIN, phone numbers and addresses & Names, phone numbers and e-mail addresses are the most frequent; IIN/BIN was mentioned by 13\%; health data by 23\% & Partially confirmed \\ \rl
+Organizations restrict or prohibit AI tools & 53\% have rules, 3\% a ban, 30\% no rules & Partially confirmed \\ \rl
+Prompts are written in Kazakh, Russian and mixed language & 73\% use several languages or mix them; 77\% use Kazakh or mixed prompts & Confirmed \\ \rl
+ChatGPT and Gemini are the main target services & Used by 90\% and 77\%; Claude by 60\% & Confirmed, with Claude as a relevant addition \\ \rl
+Users would use an automatic protection tool & 70\% chose 4 or 5 of 5; 88\% among those who have pasted personal data & Confirmed \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -221,14 +221,14 @@ The survey results lead to the following refinements of the requirements, which 
 \item Personal data detection must support Kazakh, Russian, English and mixed-language text, since the majority of respondents use several languages.
 \item Detection should prioritize recall over precision, as preferred by most respondents, while keeping false alarms manageable through user confirmation.
 \item The browser extension must show detected data and allow the user to confirm or edit it before sending; fully automatic replacement should be available as an option.
-\item The added latency target of at most 1 second is stricter than the expectations of 89\% of respondents, who accept at least 1--3 seconds, and is therefore sufficient.
-\item The architecture should allow adding Claude as a third target service through a separate adapter, as it is used by 63\% of respondents.
-\item Health data was mentioned by 20\% of respondents. It is not included in the initial scope, which focuses on direct identifiers, but is recorded as a candidate category for future work.
+\item The added latency target of at most 1 second is stricter than the expectations of 90\% of respondents, who accept at least 1--3 seconds, and is therefore sufficient.
+\item The architecture should allow adding Claude as a third target service through a separate adapter, as it is used by 60\% of respondents.
+\item Health data was mentioned by 23\% of respondents. It is not included in the initial scope, which focuses on direct identifiers, but is recorded as a candidate category for future work.
 \item The system must process data within the organization, keep a detection log without original values and provide configurable rules per data type.
 \end{itemize}
 
 \section{Limitations}
 
-The survey has several limitations. The sample is small ($n=35$) and was formed through the team's contacts, so it is not representative of all users in Kazakhstan; students and information technology specialists make up 69\% of the sample, while banking, human resources and healthcare are represented by only a few respondents. Dedicated information security specialists were not identified among the respondents, so the optional questions for this group were answered by general users. All answers are self-reported; six respondents stated that they had never pasted personal data but nevertheless selected data types, and these answers were included as reported. The results are therefore used as supporting evidence of relevance and for refining requirements, not as statistically generalizable findings.
+The survey has several limitations. The sample is small ($n=30$) and was formed through the team's contacts, so it is not representative of all users in Kazakhstan; students and information technology specialists make up 63\% of the sample, while banking, human resources and healthcare are represented by only a few respondents. Dedicated information security specialists were not identified among the respondents, so the optional questions for this group were answered by general users. All answers are self-reported; four respondents stated that they had never pasted personal data but nevertheless selected data types, and these answers were included as reported. The results are therefore used as supporting evidence of relevance and for refining requirements, not as statistically generalizable findings.
 
 \end{document}
