@@ -1,0 +1,144 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\usepackage{float}
+\begin{document}
+\maketitlepage{Supervisor Feedback Log}
+
+\section{Purpose}
+
+This log records the comments of the supervisor on the project deliverables, the decisions taken by the team and the tasks in which they are implemented. Each entry refers to a YouTrack task (\texttt{DIP-<n>}) and, after implementation, to the pull request. The original document with the comments and the completed column of team decisions is stored in the same directory.
+
+\section{Feedback Sessions}
+
+\begin{table}[H]
+\caption{Feedback sessions}\label{tab:sessions}
+\small
+\begin{tabularx}{\linewidth}{P{2.4cm}P{3.6cm}L}
+\toprule
+\thead \textbf{Date} & \textbf{Form} & \textbf{Reviewed materials} \\ \midrule
+24 Oct 2026 & Written comments on the archive of the main branch & README, proposal, literature review, technology comparison, requirements, evidence of relevance and survey responses, evaluation plan, project plan, UX prototype, diagrams, Presidio check \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The supervisor noted that the documents are well developed, the requirements are measurable and trace to experiments, and the project includes a user survey and a pilot baseline check. Point 1 had to be closed before pre-defense 1, the other points before the start of implementation in November 2026. Points 2 and 3 are to be discussed at the next meeting.
+
+\section{Comments and Decisions}
+
+{\small
+\renewcommand{\arraystretch}{1.2}
+\begin{xltabular}{\linewidth}{P{0.5cm}P{4.4cm}LP{1.7cm}P{1.5cm}}
+\caption{Comments of 24 October 2026 and team decisions}\label{tab:log}\\
+\toprule
+\thead \textbf{\#} & \textbf{Comment} & \textbf{Team decision and task} & \textbf{Deadline} & \textbf{Status} \\ \midrule
+\endfirsthead
+\multicolumn{5}{l}{\small\textit{Table \ref{tab:log} (continued)}}\\
+\toprule
+\thead \textbf{\#} & \textbf{Comment} & \textbf{Team decision and task} & \textbf{Deadline} & \textbf{Status} \\ \midrule
+\endhead
+1 & \textbf{Completeness and consistency of the materials}\newline Existing system comparison missing in the main branch; README links point to non-existent .md files, unticked checklist, Figma placeholder, no feedback log. Survey sample inconsistent (n = 30 vs n = 35). Presidio check misreported in the evaluation plan. & \textbf{Accepted; closed before pre-defense 1.}\newline --- Existing system comparison (Presidio, Google Cloud Sensitive Data Protection, Limina, Casper, PromptShield) with the Presidio experiment added as docs/existing-systems --- DIP-12.\newline --- Evidence of relevance recomputed on all 35 responses received by the data export on 22 Oct 2026 (3 later responses excluded and stated); n = 35 and the same percentages are used in all documents --- DIP-5.\newline --- Description of the Presidio check corrected (configurations A and B over all languages) --- DIP-16.\newline --- README links, status checklist and Figma link fixed --- DIP-19; feedback log added as docs/supervisor-feedback --- DIP-18. & Before pre-defense 1 & Closed \\ \rl
+2 & \textbf{Project focus in light of the survey}\newline Novelty framed around Kazakhstan identifiers, while the survey shows names, phones and e-mails as most frequent; the hard part is names and addresses in Kazakh, Russian and mixed text. No information security specialists among respondents. Question: who deploys the system and is the admin panel needed? & \textbf{Accepted; planned for November 2026.}\newline --- Novelty reformulated in the proposal and literature review: detection of names and addresses in Kazakh, Russian and mixed text with morphology-aware pseudonymization; structured identifiers are a supporting component --- DIP-20.\newline --- Answer: the system is deployed by the information security or IT department of the organization. 3--4 interviews with information security specialists or DPOs (bank, university, public body) on FR-6 and FR-7 --- DIP-21; if the need is not confirmed, the admin panel and auditor role are moved to Should. & Before November & Planned \\ \rl
+3 & \textbf{Response restoration and morphology}\newline Reverse direction of FR-3.2 not specified: restored names may have wrong case, gender or vowel harmony; tags hide gender and language from the model. Question: which replacement method and why? & \textbf{Accepted; experiment in November 2026.}\newline --- Answer: the current prototype uses typed tags; the final method is chosen by an experiment on 30--50 Russian and Kazakh prompts comparing (a) typed tags, (b) typed tags with gender and language attributes, (c) realistic surrogate names matched by gender and language (as in Casper) --- DIP-22.\newline --- New requirement FR-4.5 (grammatically correct restoration: case, gender, suffix) and a metric for it in experiments 3--4 of the evaluation plan --- DIP-22. & Before November & Planned \\ \rl
+4 & \textbf{Validity of the evaluation}\newline Template corpus and generator rules make FR-1.1 almost guaranteed; real-world variants missing; Presidio without customization is a weak baseline. Question: what confirms quality on texts not written by the team? & \textbf{Accepted; planned for November--December 2026.}\newline --- Answer: an independent held-out set of 100--150 texts with fictitious data written by people outside the team (survey volunteers), including Latin script, transliteration, IIN with spaces, lowercase names and typos --- DIP-23.\newline --- Second baseline: Presidio with minimal customization (IIN and phone regular expressions, Russian model); results reported separately for the template corpus and the independent set --- DIP-23. & Before November & Planned \\ \rl
+5 & \textbf{Threat model and legal status}\newline Protection holds only for a cooperative user; the extension and server see full texts; pseudonymized text may remain personal data through context; compliance wording needs care. & \textbf{Accepted; planned for November 2026.}\newline --- ``Threat model'' section in the requirements: the system protects against accidental disclosure by a cooperative user, not against intentional bypass (other browser, phone, disabled extension) --- DIP-24.\newline --- Deployment condition: the extension is force-installed by enterprise browser policy; minimal permissions listed (host access only to the ChatGPT and Gemini pages, storage). Server-side processing without storing original texts --- DIP-24.\newline --- ``Complies with the law'' replaced with ``reduces the risk of transferring direct identifiers''; limitations regarding quasi-identifiers described --- DIP-24. & Before November & Planned \\
+\bottomrule
+\end{xltabular}
+}
+
+\section{Tasks Created from the Feedback}
+
+\begin{table}[H]
+\caption{New YouTrack tasks}\label{tab:tasks}
+\small
+\begin{tabularx}{\linewidth}{P{1.6cm}LP{2.6cm}P{2.2cm}}
+\toprule
+\thead \textbf{Task} & \textbf{Content} & \textbf{Owner} & \textbf{Deadline} \\ \midrule
+DIP-20 & Reformulate the novelty in the proposal and literature review & Amina & Nov 2026 \\ \rl
+DIP-21 & Interviews with 3--4 information security specialists or DPOs on FR-6 and FR-7 & Nazerke & Nov 2026 \\ \rl
+DIP-22 & Experiment on replacement methods; requirement FR-4.5 and its metric & Amina & Nov 2026 \\ \rl
+DIP-23 & Independent held-out set and second baseline in the evaluation plan & Nazerke & Nov--Dec 2026 \\ \rl
+DIP-24 & Threat model, deployment condition, extension permissions, legal wording & Amina & Nov 2026 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\end{document}
