@@ -175,7 +175,7 @@ Usability is measured by task completion rate, number of errors, time per task a
 
 \subsection{Experiment 1: Comparison with the Baseline}
 
-The full system is compared with Microsoft Presidio without customization, configured with the English, Russian and multilingual spaCy models, as in the preliminary experiment. In that experiment, Presidio masked 80\% of the values in the Russian sample and 86\% in the English sample, but assigned the correct type to only 51\% and 76\% of the values respectively, and did not recognize any IIN with the correct type. The same experiment is repeated on the held-out test set.
+The full system is compared with Microsoft Presidio without customization in the two configurations of the preliminary experiment described in the document \emph{Existing System Comparison}: configuration~A, Presidio as installed with the English model applied to every text, and configuration~B, with the Russian model for Russian texts and the multilingual model for Kazakh and mixed texts. In that experiment, on 20 synthetic texts in all four language groups (51 values), configuration~A masked 80\% of the values and configuration~B 86\%, but they assigned the correct type to only 51\% and 76\% of the values respectively, and neither recognized any IIN with the correct type. The same comparison is repeated on the held-out test set.
 
 \subsection{Experiment 2: Ablation Study}
 
