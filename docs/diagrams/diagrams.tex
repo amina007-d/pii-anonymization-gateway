@@ -90,16 +90,26 @@
 
 \section{Introduction}
 
-This document presents the design diagrams of the PII Anonymization Gateway: the architecture diagram, the sequence diagram of the main scenario, the use case diagram and the entity-relationship (ER) diagram of the database. The diagrams are based on the documents \emph{Requirements Specification} and \emph{Technology Comparison} and are consistent with the user interface prototype. The editable sources (\texttt{.drawio}) and the exported images (\texttt{.png}) are stored in the \texttt{diagrams} directory of the project repository.
+This document presents the design diagrams of the PII Anonymization Gateway: the system context diagram, the component diagram (draft), the sequence diagram of the main scenario, the use case diagram and the entity-relationship (ER) diagram of the database. The diagrams are based on the documents \emph{Requirements Specification} and \emph{Technology Comparison} and are consistent with the user interface prototype. The editable sources (\texttt{.drawio}) and the exported images (\texttt{.png}) are stored in the \texttt{diagrams} directory of the project repository.
 
-\section{Architecture}
+\section{System Context}
+
+Figure~\ref{fig:ctx} shows the system as a single element and the people and external systems that interact with it. Users send text with personal data and receive restored responses; information security specialists configure policies and review the log; internal systems use the API proxy; the organization's IT department deploys the server and installs the browser extension by browser policy. ChatGPT and Gemini are external systems that receive only anonymized text.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{system-context.png}
+\caption{System context diagram}\label{fig:ctx}
+\end{figure}
+
+\section{Component Diagram (Draft)}
 
 Figure~\ref{fig:arch} shows the components of the system and their deployment. All components that process original personal data are deployed within the organization's infrastructure using Docker Compose (NFR-3); only anonymized text crosses the boundary of the organization (NFR-2).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{architecture.png}
-\caption{Architecture of the system}\label{fig:arch}
+\caption{Component diagram of the system (draft)}\label{fig:arch}
 \end{figure}
 
 The system consists of the following components:
