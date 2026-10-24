@@ -1,0 +1,234 @@
+\documentclass[12pt,a4paper]{article}
+% Compiler: pdfLaTeX (Overleaf default)
+\usepackage[T2A,T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian,english]{babel}
+\usepackage[a4paper,left=3cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=4pt}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.6em}
+\usepackage[nobottomtitles*]{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.2em}{0.5em}
+\titlespacing*{\subsection}{0pt}{0.9em}{0.4em}
+\usepackage{needspace}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{3em}
+\urlstyle{same}
+
+% table style
+\definecolor{headgray}{gray}{0.90}
+\definecolor{linegray}{gray}{0.70}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\rl}{\arrayrulecolor{linegray}\hline\arrayrulecolor{black}}
+\newcommand{\thead}{\rowcolor{headgray}}
+
+% comparison marks
+\newcommand{\yes}{\ensuremath{\checkmark}}
+\newcommand{\no}{\ding{55}}
+\newcommand{\partly}{\LEFTcircle}
+\newcommand{\ru}[1]{\foreignlanguage{russian}{#1}}
+\newcommand{\doi}[1]{doi: \href{https://doi.org/#1}{#1}}
+
+% title page
+\newcommand{\maketitlepage}[1]{%
+\begin{titlepage}
+\centering
+{\large Astana IT University\par}
+{\normalsize School of Software Engineering\par}
+\vspace{4.5cm}
+{\normalsize Diploma Project\par}
+\vspace{0.6cm}
+{\Large\bfseries Development of a System for Detecting and Anonymizing Personal Data Before Sending Text to Artificial Intelligence Services\par}
+\vspace{1.2cm}
+{\LARGE #1\par}
+\vfill
+\begin{flushright}
+\begin{tabular}{@{}l@{}}
+\textbf{Authors:} Dossan Amina, Abzhamal Nazerke\\
+\textbf{Educational programme:} Software Engineering\\
+\textbf{Supervisor:} Sakhipov A.A., PhD,\\ \hspace{2.2cm}Assistant Professor
+\end{tabular}
+\end{flushright}
+\vspace{2.5cm}
+{\normalsize Astana, 2026\par}
+\end{titlepage}
+\setcounter{page}{2}}
+\begin{document}
+\maketitlepage{Existing System Comparison}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This document examines whether existing tools for the protection of personal data already solve the problem addressed by the project, namely the transfer of texts containing personal data to external artificial intelligence (AI) services by users in Kazakhstan. Five systems are compared against a consistent set of eight criteria derived from the project requirements. All statements about the capabilities of the systems are supported by references to their official documentation, to peer-reviewed publications, or to an experiment conducted by the project team. Sources analysed in the document \emph{Literature Review} are referred to by their numbers in that document, for example ``Literature Review~[4]''.
+
+\section{Selection of Systems}
+
+The systems were selected from three groups: an open-source library, commercial services, and research systems for the protection of prompts sent to language models identified during the Scopus search. The selected systems are listed in Table~\ref{tab:systems}.
+
+\begin{table}[htbp]
+\caption{Systems selected for comparison}\label{tab:systems}
+\begin{tabularx}{\linewidth}{C{0.8cm}P{4.2cm}P{3.6cm}L}
+\toprule
+\thead \textbf{No.} & \textbf{System} & \textbf{Type} & \textbf{Reason for selection} \\ \midrule
+1 & Microsoft Presidio & Open-source library (MIT licence) & The most widely used open-source framework for personal data detection and anonymization; used as the baseline of the project \\ \rl
+2 & Google Cloud Sensitive Data Protection (formerly Cloud DLP) & Cloud service & A major commercial detection service with country-specific detectors \\ \rl
+3 & Limina (formerly Private AI) & Commercial product (container or API) & Explicitly targets privacy in integrations with language models (de-identification and re-identification) \\ \rl
+4 & Casper (Chong et al., 2025) & Research system, browser extension & The closest academic system: sanitizes prompts in the browser before they reach a web-based language model~\cite{casper} \\ \rl
+5 & PromptShield (Asimine et al., 2026) & Research system, middleware & A middleware layer between the user and a chatbot that combines rules, a multilingual NER model and user confirmation~\cite{promptshield} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Two further candidates were screened and excluded. Amazon Comprehend detects personal data only in English and Spanish texts~\cite{aws}, so it does not satisfy the language criteria by definition. Hide and Seek (Chen et al., 2023) follows the same anonymize--send--restore principle but is an English-only preprint; this principle is represented in the comparison by the peer-reviewed Casper system.
+
+\section{Comparison Criteria}
+
+The criteria follow from the problem statement and the requirements of the project (document \emph{Requirements Specification}). They are listed in Table~\ref{tab:criteria}.
+
+\begin{table}[htbp]
+\caption{Comparison criteria}\label{tab:criteria}
+\begin{tabularx}{\linewidth}{C{1cm}LP{3.6cm}}
+\toprule
+\thead \textbf{ID} & \textbf{Criterion} & \textbf{Related requirement} \\ \midrule
+C1 & Support of the Kazakh language & FR-1 \\ \rl
+C2 & Support of Russian and mixed (code-switched) text & FR-1 \\ \rl
+C3 & Recognition of Kazakhstan identifiers (IIN/BIN) with checksum validation & FR-1, FR-2 \\ \rl
+C4 & Reversible pseudonymization and automatic restoration of the original values in the AI response & FR-3, FR-4 \\ \rl
+C5 & Integration at the point of use (web interface of ChatGPT or Gemini, or their programming interfaces) & FR-5 \\ \rl
+C6 & On-premise processing (data remain within the organization) & NFR-2, NFR-3 \\ \rl
+C7 & Configurable rules and policies per data type & FR-6 \\ \rl
+C8 & Open source code or free use & Project constraint \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Comparison Results}
+
+The results of the comparison are summarized in Table~\ref{tab:comparison}. The last column does not present results: it shows the properties that the proposed system is designed to have according to its requirements. Whether these properties are achieved will be verified during the evaluation of the system.
+
+\begin{table}[htbp]
+\caption{Comparison of existing systems (\yes{} supported, \partly{} partially supported or requires custom development, \no{} not supported)}\label{tab:comparison}
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{P{2.6cm}LLLLLL}
+\toprule
+\thead \textbf{Criterion} & \textbf{Presidio} & \textbf{Google SDP} & \textbf{Limina} & \textbf{Casper} & \textbf{Prompt\-Shield} & \textbf{Proposed system (planned)} \\ \midrule
+C1 Kazakh & \partly & \partly & \no & \no & \partly & \yes \\ \rl
+C2 Russian, mixed text & \partly & \partly & \partly & \no & \partly & \yes \\ \rl
+C3 IIN/BIN with checksum & \no & \no & \no & \no & \no & \yes \\ \rl
+C4 Reversible, automatic restoration & \partly & \partly & \yes & \partly & \no & \yes \\ \rl
+C5 Point-of-use integration & \no{} library & \no & \partly{} API & \yes{} ChatGPT only & \partly{} own interface & \yes{} extension and proxy \\ \rl
+C6 On-premise & \yes & \no{} cloud & \yes & \yes{} user device & \partly{} prototype & \yes \\ \rl
+C7 Configurable policies & \partly{} in code & \yes & \yes & \partly{} user rules & \partly{} user choice & \yes{} organization policies \\ \rl
+C8 Open source or free & \yes{} MIT & \no{} paid & \partly{} free tier & \no{} code not published & \no{} code not published & \yes \\ \rl
+Reported detection quality & Section~\ref{sec:experiment} & --- & --- & Accuracy 92.6\% (English) & P 0.42, R 0.71 & Recall $\geq$ 0.95 for structured identifiers \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Analysis of Individual Systems}
+
+\subsection{Microsoft Presidio}
+
+Presidio is designed primarily for English: in its default configuration it contains recognizers and models only for English, and other languages require additional NLP models and recognizers to be configured manually~\cite{presidio-lang}. Country-specific recognizers are provided for eighteen countries, none of which is Kazakhstan or Russia~\cite{presidio-ent}. Reversible anonymization is possible only through the encryption operator and the corresponding decryption deanonymizer; there is no workflow for restoring values within a response of a language model~\cite{presidio-anon}. Presidio runs on-premise and is distributed under the MIT licence, but rules for new data types must be implemented as program code.
+
+\subsection{Google Cloud Sensitive Data Protection}
+
+According to the documentation, most global information types work with multiple languages, and country-specific types support English and the language of the respective country; however, the list of languages is not given, Kazakh is not mentioned, and testing on one's own data is recommended~\cite{gcp-types}. The only Kazakhstan-specific information type is the passport number; there is no type for IIN or BIN~\cite{gcp-ref}. Pseudonymized values can be re-identified when deterministic or format-preserving encryption is used, but there is no workflow for restoring values in a response of a language model~\cite{gcp-pseudo}. Custom detectors based on regular expressions and dictionaries are supported~\cite{gcp-custom}. The service processes data in the cloud and is paid.
+
+\subsection{Limina}
+
+Limina supports fourteen core languages including Russian; Kazakh is not listed, and the processing of mixed-language text is not documented~\cite{limina-lang}. The list of supported entity types contains national identifiers of several countries (for example, the Indian Aadhaar number) but no Kazakhstan IIN or BIN; a custom regular expression can be added, but without checksum validation~\cite{limina-ent}. Detection can be configured by enabling or disabling entity types, using preset groups and allow or block filters~\cite{limina-cfg}. The product provides a re-identification endpoint that re-injects removed entities into the response of a language model~\cite{limina-reid}, and it can run in the customer's own infrastructure; a free starter plan is available, while other plans are commercial~\cite{limina}.
+
+\subsection{Casper}
+
+Casper is a browser extension for the web interface of ChatGPT that runs entirely on the user's device~\cite{casper}. It combines a rule-based filter with ten regular-expression patterns, an English BERT model for named entity recognition trained on CoNLL-2003, and a local language model (Llama~3, 8B) that detects sensitive topics and requires about 6~GB of GPU memory. Detected entities are replaced with realistic pseudonyms, and the mapping is stored in the extension. Original values are shown only on request: automatic restoration was not implemented because of the latency of streamed responses. The evaluation was conducted in English only, national identifiers are not validated, and the source code is not published.
+
+\subsection{PromptShield}
+
+PromptShield is a middleware layer with its own chat interface through which the user sends prompts~\cite{promptshield}. Sensitive data are detected with regular expressions (IBAN, card number, e-mail address, phone number, address, PIN code and tokens) and a fine-tuned multilingual XLM-RoBERTa model; checksum validation is not described. The user decides for each detected item whether to keep or remove it and sets retention periods per data category. Detected values are replaced with removal placeholders and are not restored. The detection quality reported on the PII-Masking-400k dataset is precision 0.416 and recall 0.709; Kazakh and Russian were not evaluated, and the source code is not published.
+
+\section{Experiment: Presidio on Kazakh, Russian, English and Mixed Texts}\label{sec:experiment}
+
+To verify the documented limitations of the baseline in practice, the team evaluated Presidio (version 2.2.364 with spaCy 3.8) on 20 synthetic texts (6 Kazakh, 6 Russian, 4 English and 4 mixed) containing 51 personal data entities: names, IIN, phone numbers, e-mail addresses, addresses, IBAN and card numbers. All data are fictitious; IIN and IBAN values only have a valid format and checksum. Two configurations were tested: configuration~A is Presidio as installed (English model) applied to every text; configuration~B uses the Russian model for Russian texts and the multilingual model for Kazakh and mixed texts, with pattern recognizers enabled for these languages.
+
+Two metrics were used. An entity is considered \emph{masked} if any detected span overlaps it, that is, the value would be hidden. An entity has the \emph{correct type} if it is detected with the right entity type, which is necessary for a meaningful pseudonym and for type-specific policies. The results are given in Table~\ref{tab:presidio}.
+
+\begin{table}[htbp]
+\caption{Recall of Presidio on the synthetic test set}\label{tab:presidio}
+\small
+\begin{tabularx}{\linewidth}{LC{2.3cm}C{2.3cm}C{2.3cm}C{2.3cm}}
+\toprule
+\thead \textbf{Entity type / language} & \textbf{A: masked} & \textbf{A: correct type} & \textbf{B: masked} & \textbf{B: correct type} \\ \midrule
+Person (18) & 0.56 & 0.50 & 1.00 & 0.94 \\ \rl
+IIN (6) & 1.00\textsuperscript{*} & \textbf{0.00} & 0.17 & \textbf{0.00} \\ \rl
+Phone number (8) & 1.00 & 0.62 & 1.00 & 1.00 \\ \rl
+Address (3) & 0.67 & \textbf{0.00} & 0.33 & \textbf{0.00} \\ \rl
+Location (4) & 0.75 & 0.25 & 1.00 & 0.50 \\ \rl
+E-mail, card, IBAN (11) & 1.00 & 1.00 & 1.00 & 1.00 \\ \midrule
+Kazakh texts & 0.86 & 0.50 & 0.86 & 0.71 \\ \rl
+Russian texts & 0.73 & 0.33 & 0.80 & 0.80 \\ \midrule
+\textbf{Overall (51)} & \textbf{0.80} & \textbf{0.51} & \textbf{0.86} & \textbf{0.76} \\ \rl
+False positives & 4 & & 1 & \\
+\bottomrule
+\end{tabularx}
+\par\smallskip\footnotesize\textsuperscript{*} In configuration A, all IIN values were masked only by coincidence: they were labelled as US bank or driver licence numbers because of their 12-digit pattern, without IIN validation.
+\end{table}
+
+The experiment shows that IIN is never recognized as IIN in either configuration; configuring the Russian and multilingual models makes the result worse (five of six IIN values are missed), because the US-specific number recognizers work only for English. Addresses such as ``\ru{ул. Сатпаева, д. 5, кв. 10}'' and ``\ru{Абай даңғылы 12}'' are never assigned the correct type. The default English configuration misses Russian and Kazakh names in inflected forms (``\ru{Ахметову Тимуру}'', ``\ru{Қайрат Серікбаевқа}'') and produces false positives on ordinary Russian words (``\ru{Клиентка}'', ``\ru{Привет}''). Structured identifiers with international formats (e-mail address, card number, IBAN) are detected reliably and can be reused. The results are preliminary because of the small synthetic set and will be repeated on the full test corpus; the script and its output are stored in the \texttt{tests/baseline} directory of the repository.
+
+These findings agree with the studies analysed in the \emph{Literature Review}: low recall of default Presidio on direct identifiers (sources [4] and [5]), its low precision and lower recall for names of non-European origin (source [8]), language-specific identifiers as the most difficult category (source [9]), and false positives of patterns without checksum validation (source [7]).
+
+\section{Conclusion}
+
+None of the existing systems combines all required properties. Kazakh is not supported by any of them: the commercial tools do not list it, and both research systems were evaluated in English or on European-language data. No system recognizes the Kazakhstan IIN or BIN with validation; Google Cloud detects only the Kazakhstan passport number. Automatic restoration of the original values in the AI response is available only in a commercial product without Kazakh support (Limina); Casper restores values only on request, and PromptShield removes data without restoration. Integration at the point of use exists only in Casper, which supports only ChatGPT, uses an English NER model and requires a heavy local model, whereas PromptShield requires users to work through a separate chat interface. Cloud services process data outside the organization, which contradicts the goal of not transferring personal data to third parties. The open-source option, Presidio, runs on-premise but in the experiment reached only 0.51--0.76 correct-type recall and 0.00 for IIN and addresses.
+
+Therefore, a dedicated solution is required: an on-premise gateway that detects personal data in Kazakh, Russian, English and mixed text, recognizes Kazakhstan identifiers with checksum validation, and automatically restores the original values in the AI response, available both as a browser extension and as a proxy interface. From the reviewed systems, the project reuses Presidio as a framework and baseline (its e-mail, card and IBAN recognizers work reliably), the interception approach of Casper, and the per-item user confirmation of PromptShield.
+
+\begin{thebibliography}{99}
+\bibitem{casper} C. J. Chong, C. Hou, Z. Yao, and S. M. S. Talebi, ``Casper: Prompt sanitization for protecting user privacy in web-based large language models,'' in \emph{Proc. IEEE 12th Int. Conf. on Cyber Security and Cloud Computing (CSCloud)}, 2025, pp. 122--131, \doi{10.1109/CSCloud66326.2025.00027}.
+\bibitem{promptshield} A. I. Asimine, F. Salhab Doria Ricardo, F. Torgo, G. Choudhary, and N. Dragoni, ``PromptShield: Protecting user privacy in AI chatbots,'' \emph{Software}, vol.~5, no.~2, art.~24, 2026, \doi{10.3390/software5020024}.
+\bibitem{aws} Amazon Web Services, ``Detecting PII entities,'' Amazon Comprehend Developer Guide. [Online]. Available: \url{https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html}
+\bibitem{presidio-lang} Microsoft Presidio, ``Multi-language support.'' [Online]. Available: \url{https://presidio.dataprivacystack.org/analyzer/languages/}
+\bibitem{presidio-ent} Microsoft Presidio, ``Supported entities.'' [Online]. Available: \url{https://presidio.dataprivacystack.org/supported_entities/}
+\bibitem{presidio-anon} Microsoft Presidio, ``Presidio Anonymizer.'' [Online]. Available: \url{https://presidio.dataprivacystack.org/anonymizer/}
+\bibitem{gcp-types} Google Cloud, ``InfoTypes and infoType detectors,'' Sensitive Data Protection documentation. [Online]. Available: \url{https://docs.cloud.google.com/sensitive-data-protection/docs/concepts-infotypes}
+\bibitem{gcp-ref} Google Cloud, ``InfoType detector reference,'' Sensitive Data Protection documentation. [Online]. Available: \url{https://docs.cloud.google.com/sensitive-data-protection/docs/infotypes-reference}
+\bibitem{gcp-pseudo} Google Cloud, ``Pseudonymization,'' Sensitive Data Protection documentation. [Online]. Available: \url{https://docs.cloud.google.com/sensitive-data-protection/docs/pseudonymization}
+\bibitem{gcp-custom} Google Cloud, ``Creating custom infoType detectors,'' Sensitive Data Protection documentation. [Online]. Available: \url{https://docs.cloud.google.com/sensitive-data-protection/docs/creating-custom-infotypes}
+\bibitem{limina-lang} Limina (Private AI), ``Supported languages,'' documentation. [Online]. Available: \url{https://docs.private-ai.com/languages}
+\bibitem{limina-ent} Limina (Private AI), ``Supported entity types,'' documentation. [Online]. Available: \url{https://docs.private-ai.com/entities/supported-entity-types.md}
+\bibitem{limina-cfg} Limina (Private AI), ``Customizing detection,'' documentation. [Online]. Available: \url{https://docs.private-ai.com/configuration-and-operations/entity-detection-and-redaction/customizing-detection}
+\bibitem{limina-reid} Limina (Private AI), ``Reidentify text,'' documentation. [Online]. Available: \url{https://docs.private-ai.com/latest/reidentify-text}
+\bibitem{limina} Limina, product website. [Online]. Available: \url{https://www.getlimina.ai/en}
+\end{thebibliography}
+
+\end{document}
